@@ -4,10 +4,58 @@ import { FieldValues, SubmitHandler } from "react-hook-form";
 import AppInput from "../components/form/AppInput";
 import { LoginOutlined } from "@ant-design/icons";
 import loginImage from "../assets/images/login/login-image.jpg";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../redux/hooks";
+import { useLoginMutation } from "../redux/features/auth/authApi";
+import { toast } from "sonner";
+import { verifyToken } from "../utils/verifyToken";
+import {
+  TAuthUser,
+  TErrorApiResponse,
+  TSuccessApiResponse,
+  TUser,
+} from "../types";
+import { setUser } from "../redux/features/auth/authSlice";
+import { isFetchBaseQueryError } from "../utils/isFetchBaseQueryError";
 
 const Login = () => {
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data);
+  const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
+
+  const [login] = useLoginMutation();
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const toastId = toast.loading("Logging in");
+
+    const userInfo = {
+      email: data.email,
+      password: data.password,
+    };
+
+    try {
+      const res = await login(userInfo);
+
+      if ("data" in res && res.data) {
+        const data = res.data as TSuccessApiResponse<TUser>;
+
+        const user = verifyToken(data.token!) as TAuthUser;
+
+        dispatch(setUser({ user, token: data.token! }));
+
+        toast.success("Logged in", { id: toastId, duration: 2000 });
+        navigate(`/`);
+      } else if (isFetchBaseQueryError(res.error)) {
+        const error = res.error.data as TErrorApiResponse;
+
+        toast.error(error.message, { id: toastId, duration: 2000 });
+      } else {
+        toast.error("Something went wrong", { id: toastId, duration: 2000 });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong", { id: toastId, duration: 2000 });
+    }
   };
 
   return (
@@ -57,9 +105,9 @@ const Login = () => {
               <Col span={24}>
                 <AppInput
                   type="text"
-                  name="userId"
-                  label="User ID"
-                  placeholder="Enter your user ID"
+                  name="email"
+                  label="Email"
+                  placeholder="Enter your email"
                   size="large"
                   required
                 />
