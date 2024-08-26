@@ -14,11 +14,12 @@ const MainLayout: React.FC = () => {
       <Content style={{ padding: "24px" }}>
         <div
           style={{
-            margin: "16px 0",
             padding: 24,
             minHeight: "100vh",
             background: "#fff",
             borderRadius: "5px",
+            maxWidth: "1400px",
+            margin: "0 auto",
           }}>
           <Outlet />
         </div>

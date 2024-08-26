@@ -22,10 +22,16 @@ const AvailabilityCheck = () => {
   };
 
   return (
-    <>
+    <div
+      style={{
+        backgroundColor: "#C0E0DE",
+        padding: "2rem",
+        marginTop: "2rem",
+        borderRadius: "8px",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+      }}>
       <h2
         style={{
-          marginTop: "2rem",
           marginBottom: "2rem",
           display: "flex",
           justifyContent: "center",
@@ -59,7 +65,7 @@ const AvailabilityCheck = () => {
           </Col>
         </Row>
       </Form>
-    </>
+    </div>
   );
 };
 

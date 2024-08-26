@@ -170,7 +170,7 @@ const Navbar = () => {
               style={{
                 marginLeft: "1rem",
                 cursor: "pointer",
-                border: "1px solid blue",
+                border: "1px solid #4F7CAC",
               }}
             />
           </Dropdown>
