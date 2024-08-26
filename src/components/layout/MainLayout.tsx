@@ -2,6 +2,7 @@ import React from "react";
 import { Layout } from "antd";
 import Navbar from "./Navbar";
 import AppFooter from "./AppFooter";
+import { Outlet } from "react-router-dom";
 
 const { Content } = Layout;
 
@@ -19,7 +20,7 @@ const MainLayout: React.FC = () => {
             background: "#fff",
             borderRadius: "5px",
           }}>
-          Content
+          <Outlet />
         </div>
       </Content>
 
