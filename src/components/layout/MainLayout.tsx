@@ -8,7 +8,7 @@ const { Content } = Layout;
 
 const MainLayout: React.FC = () => {
   return (
-    <Layout>
+    <Layout style={{ background: "#fff" }}>
       <Navbar />
 
       <Content style={{ padding: "24px" }}>
