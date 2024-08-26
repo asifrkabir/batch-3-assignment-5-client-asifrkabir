@@ -1,23 +1,18 @@
-import { Button, Col, Row } from "antd";
-import AppForm from "../components/form/AppForm";
-import { FieldValues, SubmitHandler } from "react-hook-form";
-import AppInput from "../components/form/AppInput";
 import { LoginOutlined } from "@ant-design/icons";
-import loginImage from "../assets/images/login/login-image.jpg";
+import { Button, Col, Row } from "antd";
+import { FieldValues, SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../redux/hooks";
-import { useLoginMutation } from "../redux/features/auth/authApi";
 import { toast } from "sonner";
-import { verifyToken } from "../utils/verifyToken";
-import {
-  TAuthUser,
-  TErrorApiResponse,
-  TSuccessApiResponse,
-  TUser,
-} from "../types";
+import loginImage from "../assets/images/login/login-image.jpg";
+import AppForm from "../components/form/AppForm";
+import AppInput from "../components/form/AppInput";
+import { useLoginMutation } from "../redux/features/auth/authApi";
 import { setUser } from "../redux/features/auth/authSlice";
-import { isFetchBaseQueryError } from "../utils/isFetchBaseQueryError";
+import { useAppDispatch } from "../redux/hooks";
 import { loginSchema } from "../schemas/auth/auth.schema";
+import { TAuthUser, TError, TApiResponse, TUser } from "../types";
+import { isFetchBaseQueryError } from "../utils/isFetchBaseQueryError";
+import { verifyToken } from "../utils/verifyToken";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -38,7 +33,7 @@ const Login = () => {
       const res = await login(userInfo);
 
       if ("data" in res && res.data) {
-        const data = res.data as TSuccessApiResponse<TUser>;
+        const data = res.data as TApiResponse<TUser>;
 
         const user = verifyToken(data.token!) as TAuthUser;
 
@@ -47,9 +42,9 @@ const Login = () => {
         toast.success("Logged in", { id: toastId, duration: 2000 });
         navigate(`/`);
       } else if (isFetchBaseQueryError(res.error)) {
-        const error = res.error.data as TErrorApiResponse;
+        const error = res.error as TError;
 
-        toast.error(error.message, { id: toastId, duration: 2000 });
+        toast.error(error.data.message, { id: toastId, duration: 2000 });
       } else {
         toast.error("Something went wrong", { id: toastId, duration: 2000 });
       }

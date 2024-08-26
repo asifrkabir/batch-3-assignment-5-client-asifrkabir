@@ -8,7 +8,7 @@ import AppInput from "../components/form/AppInput";
 import AppTextArea from "../components/form/AppTextArea";
 import { useRegisterMutation } from "../redux/features/auth/authApi";
 import { registerSchema } from "../schemas/auth/auth.schema";
-import { TErrorApiResponse } from "../types";
+import { TError } from "../types";
 import { isFetchBaseQueryError } from "../utils/isFetchBaseQueryError";
 
 const Register = () => {
@@ -38,9 +38,9 @@ const Register = () => {
         });
         navigate(`/login`);
       } else if (isFetchBaseQueryError(res.error)) {
-        const error = res.error.data as TErrorApiResponse;
+        const error = res.error as TError;
 
-        toast.error(error.message, { id: toastId, duration: 2000 });
+        toast.error(error.data.message, { id: toastId, duration: 2000 });
       } else {
         toast.error("Something went wrong", { id: toastId, duration: 2000 });
       }
