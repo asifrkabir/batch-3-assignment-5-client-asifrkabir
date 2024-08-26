@@ -1,19 +1,69 @@
-import React, { useState, useEffect } from "react";
-import { Layout, Menu, Drawer, Button, Avatar, Flex } from "antd";
-import { MenuOutlined, UserOutlined } from "@ant-design/icons";
+import { useState, useEffect } from "react";
+import {
+  Layout,
+  Menu,
+  Drawer,
+  Button,
+  Avatar,
+  Dropdown,
+  MenuProps,
+} from "antd";
+import { MenuOutlined } from "@ant-design/icons";
 import logo from "../../assets/images/logo/velocirent_logo.png";
-import { Link } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import {
+  logout,
+  selectCurrentToken,
+} from "../../redux/features/auth/authSlice";
+import { TAuthUser } from "../../types";
+import { verifyToken } from "../../utils/verifyToken";
+import { toast } from "sonner";
 
 const { Header } = Layout;
 
-const items = new Array(3).fill(null).map((_, index) => ({
-  key: String(index + 1),
-  label: `nav ${index + 1}`,
-}));
-
-const Navbar: React.FC = () => {
+const Navbar = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [drawerVisible, setDrawerVisible] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useAppDispatch();
+  const token = useAppSelector(selectCurrentToken);
+
+  let user: TAuthUser | null = null;
+  if (token) {
+    user = verifyToken(token) as TAuthUser;
+  }
+
+  const defaultItems = [
+    { key: "/", label: <NavLink to="/">Home</NavLink> },
+    { key: "/about", label: <NavLink to="/about">About</NavLink> },
+  ];
+
+  const userItems = [
+    { key: "profile", label: <NavLink to="/profile">Profile</NavLink> },
+    { key: "my-rentals", label: <NavLink to="/rentals">My Rentals</NavLink> },
+  ];
+
+  const adminItems = [
+    {
+      key: "adminDashboard",
+      label: <NavLink to="/admin">Admin Dashboard</NavLink>,
+    },
+    {
+      key: "manageUsers",
+      label: <NavLink to="/manage-users">Manage Users</NavLink>,
+    },
+  ];
+
+  let menuItems = [...defaultItems];
+
+  if (user?.role === "user") {
+    menuItems = [...menuItems, ...userItems];
+  } else if (user?.role === "admin") {
+    menuItems = [...menuItems, ...adminItems];
+  }
 
   useEffect(() => {
     const handleResize = () => {
@@ -37,6 +87,24 @@ const Navbar: React.FC = () => {
   const onClose = () => {
     setDrawerVisible(false);
   };
+
+  const handleLogout = () => {
+    const toastId = toast.loading("Logging out");
+
+    dispatch(logout());
+
+    toast.success("Logged out", { id: toastId, duration: 2000 });
+
+    navigate("/login");
+  };
+
+  const avatarMenuItems: MenuProps["items"] = [
+    { key: "profile", label: <Link to="/profile">Profile</Link> },
+    {
+      key: "logout",
+      label: <p onClick={handleLogout}>Logout</p>,
+    },
+  ];
 
   return (
     <>
@@ -80,20 +148,37 @@ const Navbar: React.FC = () => {
                 />
               </div>
             </Link>
-            <Flex
-              align="center"
-              style={{ flex: 1, justifyContent: "flex-end" }}>
+            <div
+              style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
               <Menu
                 theme="light"
                 mode="horizontal"
-                defaultSelectedKeys={["1"]}
-                items={items}
+                selectedKeys={[location.pathname]}
+                items={menuItems}
                 style={{ flex: 1, justifyContent: "flex-end" }}
               />
-            </Flex>
+            </div>
           </>
         )}
-        <Avatar icon={<UserOutlined />} style={{ marginLeft: "1rem" }} />
+        {user ? (
+          <Dropdown
+            menu={{ items: avatarMenuItems }}
+            trigger={["click", "hover"]}>
+            <Avatar
+              size="large"
+              src="https://api.dicebear.com/7.x/miniavs/svg?seed=3"
+              style={{
+                marginLeft: "1rem",
+                cursor: "pointer",
+                border: "1px solid blue",
+              }}
+            />
+          </Dropdown>
+        ) : (
+          <Button type="primary" style={{ marginLeft: "1rem" }}>
+            <Link to="/login">Login</Link>
+          </Button>
+        )}
       </Header>
 
       <Drawer
@@ -105,8 +190,8 @@ const Navbar: React.FC = () => {
         <Menu
           theme="light"
           mode="inline"
-          defaultSelectedKeys={["1"]}
-          items={items}
+          selectedKeys={[location.pathname]}
+          items={menuItems}
           onClick={onClose}
         />
       </Drawer>
