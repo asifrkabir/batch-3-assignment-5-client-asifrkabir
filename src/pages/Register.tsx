@@ -1,51 +1,42 @@
-import { Button, Col, Row } from "antd";
-import AppForm from "../components/form/AppForm";
-import { FieldValues, SubmitHandler } from "react-hook-form";
-import AppInput from "../components/form/AppInput";
 import { LoginOutlined } from "@ant-design/icons";
-import loginImage from "../assets/images/login/login-image.jpg";
+import { Button, Col, Row } from "antd";
+import { FieldValues, SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../redux/hooks";
-import { useLoginMutation } from "../redux/features/auth/authApi";
 import { toast } from "sonner";
-import { verifyToken } from "../utils/verifyToken";
-import {
-  TAuthUser,
-  TErrorApiResponse,
-  TSuccessApiResponse,
-  TUser,
-} from "../types";
-import { setUser } from "../redux/features/auth/authSlice";
+import AppForm from "../components/form/AppForm";
+import AppInput from "../components/form/AppInput";
+import AppTextArea from "../components/form/AppTextArea";
+import { useRegisterMutation } from "../redux/features/auth/authApi";
+import { registerSchema } from "../schemas/auth/auth.schema";
+import { TErrorApiResponse } from "../types";
 import { isFetchBaseQueryError } from "../utils/isFetchBaseQueryError";
-import { loginSchema } from "../schemas/auth/auth.schema";
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
 
-  const dispatch = useAppDispatch();
-
-  const [login] = useLoginMutation();
+  const [register] = useRegisterMutation();
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const toastId = toast.loading("Logging in");
+    const toastId = toast.loading("Processing...");
 
-    const userInfo = {
+    const registrationData = {
+      name: data.name,
       email: data.email,
       password: data.password,
+      phone: data.phone,
+      address: data.address,
+      role: "user",
     };
 
     try {
-      const res = await login(userInfo);
+      const res = await register(registrationData);
 
       if ("data" in res && res.data) {
-        const data = res.data as TSuccessApiResponse<TUser>;
-
-        const user = verifyToken(data.token!) as TAuthUser;
-
-        dispatch(setUser({ user, token: data.token! }));
-
-        toast.success("Logged in", { id: toastId, duration: 2000 });
-        navigate(`/`);
+        toast.success("Registration successful", {
+          id: toastId,
+          duration: 2000,
+        });
+        navigate(`/login`);
       } else if (isFetchBaseQueryError(res.error)) {
         const error = res.error.data as TErrorApiResponse;
 
@@ -68,42 +59,33 @@ const Login = () => {
         style={{
           display: "flex",
           width: "100%",
-          maxWidth: "800px",
+          maxWidth: "1200px",
           background: "#fff",
           borderRadius: "5px",
           overflow: "hidden",
           boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
         }}>
-        <Col
-          xs={0}
-          md={12}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "#fff",
-          }}>
-          <img
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-            src={loginImage}
-            alt="Login visual"
-          />
-        </Col>
-        <Col xs={24} md={12} style={{ padding: "2rem" }}>
+        <Col span={24} style={{ padding: "2rem" }}>
           <h1
             style={{
               textAlign: "center",
               marginBottom: "1.5em",
             }}>
-            Login
+            Register
           </h1>
-          <AppForm onSubmit={onSubmit} schema={loginSchema}>
+          <AppForm onSubmit={onSubmit} schema={registerSchema}>
             <Row gutter={[24, 24]}>
-              <Col span={24}>
+              <Col xs={24} md={12} lg={12}>
+                <AppInput
+                  type="text"
+                  name="name"
+                  label="Name"
+                  placeholder="Enter your name"
+                  size="large"
+                  required
+                />
+              </Col>
+              <Col xs={24} md={12} lg={12}>
                 <AppInput
                   type="text"
                   name="email"
@@ -113,13 +95,33 @@ const Login = () => {
                   required
                 />
               </Col>
-              <Col span={24}>
+              <Col xs={24} md={12} lg={12}>
                 <AppInput
                   type="password"
                   name="password"
                   label="Password"
                   placeholder="Enter your password"
                   size="large"
+                  required
+                />
+              </Col>
+              <Col xs={24} md={12} lg={12}>
+                <AppInput
+                  type="text"
+                  name="phone"
+                  label="Phone"
+                  placeholder="Enter your phone number"
+                  size="large"
+                  required
+                />
+              </Col>
+              <Col span={24}>
+                <AppTextArea
+                  name="address"
+                  label="Address"
+                  placeholder="Enter your address"
+                  size="large"
+                  rows={3}
                   required
                 />
               </Col>
@@ -135,13 +137,13 @@ const Login = () => {
                 backgroundColor: "#1890ff",
                 borderColor: "#1890ff",
               }}>
-              Login <LoginOutlined />
+              Register <LoginOutlined />
             </Button>
 
             <p style={{ textAlign: "center", marginTop: "1rem" }}>
-              Don't have an account?{" "}
+              Already have an account?{" "}
               <span>
-                <Link to="/register">Register now</Link>
+                <Link to="/login">Login</Link>
               </span>
             </p>
           </AppForm>
@@ -151,4 +153,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
