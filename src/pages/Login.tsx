@@ -17,6 +17,7 @@ import {
 } from "../types";
 import { setUser } from "../redux/features/auth/authSlice";
 import { isFetchBaseQueryError } from "../utils/isFetchBaseQueryError";
+import { loginSchema } from "../schemas/auth/auth.schema";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -100,7 +101,7 @@ const Login = () => {
             }}>
             Login
           </h1>
-          <AppForm onSubmit={onSubmit}>
+          <AppForm onSubmit={onSubmit} schema={loginSchema}>
             <Row gutter={[24, 24]}>
               <Col span={24}>
                 <AppInput
