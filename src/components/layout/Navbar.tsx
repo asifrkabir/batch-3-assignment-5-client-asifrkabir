@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Menu, Drawer, Button, Avatar, Flex } from "antd";
 import { MenuOutlined, UserOutlined } from "@ant-design/icons";
+import logo from "../../assets/images/logo/velocirent_logo.png";
+import { Link } from "react-router-dom";
 
 const { Header } = Layout;
 
@@ -57,15 +59,27 @@ const Navbar: React.FC = () => {
               onClick={showDrawer}
               style={{ marginRight: 16 }}
             />
-            <div className="demo-logo" style={{ flex: 1 }}>
-              BikeRental
+            <div style={{ flex: 1 }}>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <img
+                  src={logo}
+                  alt=""
+                  style={{ objectFit: "cover", maxWidth: "3rem" }}
+                />
+              </div>
             </div>
           </>
         ) : (
           <>
-            <div className="demo-logo" style={{ flex: 1 }}>
-              BikeRental
-            </div>
+            <Link to="/">
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <img
+                  src={logo}
+                  alt=""
+                  style={{ objectFit: "cover", maxWidth: "4rem" }}
+                />
+              </div>
+            </Link>
             <Flex
               align="center"
               style={{ flex: 1, justifyContent: "flex-end" }}>

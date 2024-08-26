@@ -1,8 +1,9 @@
 import React from "react";
 import { Layout } from "antd";
 import Navbar from "./Navbar";
+import AppFooter from "./AppFooter";
 
-const { Content, Footer } = Layout;
+const { Content } = Layout;
 
 const MainLayout: React.FC = () => {
   return (
@@ -22,9 +23,7 @@ const MainLayout: React.FC = () => {
         </div>
       </Content>
 
-      <Footer style={{ textAlign: "center" }}>
-        BikeRental ©{new Date().getFullYear()} Created by YourName
-      </Footer>
+      <AppFooter />
     </Layout>
   );
 };
