@@ -48,8 +48,10 @@ const Navbar = () => {
   ];
 
   const userItems: MenuItemType[] = [
-    { key: "profile", label: <NavLink to="/profile">Profile</NavLink> },
-    { key: "my-rentals", label: <NavLink to="/rentals">My Rentals</NavLink> },
+    {
+      key: "/my-rentals",
+      label: <NavLink to="/my-rentals">My Rentals</NavLink>,
+    },
     { key: "/bikes", label: <NavLink to="/bikes">All Bikes</NavLink> },
   ];
 

@@ -7,6 +7,7 @@ import Register from "../pages/Register";
 import AllBikes from "../pages/Bike/AllBikes";
 import ProtectedRoute from "../components/layout/ProtectedRoute";
 import BikeDetails from "../pages/Bike/BikeDetails";
+import MyRentals from "../pages/Bike/MyRentals";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <BikeDetails />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/my-rentals",
+        element: (
+          <ProtectedRoute>
+            <MyRentals />
           </ProtectedRoute>
         ),
       },
