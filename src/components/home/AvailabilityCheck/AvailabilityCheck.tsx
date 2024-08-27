@@ -24,7 +24,7 @@ const AvailabilityCheck = () => {
   return (
     <div
       style={{
-        backgroundColor: "#C0E0DE",
+        backgroundColor: "#3C474B",
         padding: "2rem",
         marginTop: "2rem",
         borderRadius: "8px",
@@ -38,6 +38,7 @@ const AvailabilityCheck = () => {
           alignItems: "center",
           flexWrap: "wrap",
           textAlign: "center",
+          color: "#fff",
         }}>
         Have a trip planned out? Check available bikes here{" "}
         <LuBike style={{ marginLeft: "0.5rem" }} />

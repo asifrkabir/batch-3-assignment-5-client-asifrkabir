@@ -14,7 +14,7 @@ const FeaturedBikes = () => {
   return (
     <>
       <h1 style={{ textAlign: "center", marginBottom: "4rem" }}>
-        Features Bikes
+        Featured Bikes
       </h1>
       <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
         <Row gutter={[24, 24]} justify="center">

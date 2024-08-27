@@ -38,7 +38,7 @@ const Testimonials = () => {
       <Marquee pauseOnHover>
         {testimonials.map((testimonial, index) => {
           return (
-            <Card style={{ maxWidth: 400, margin: "0 2rem" }} key={index}>
+            <Card style={{ maxWidth: 400, margin: "0.5rem 2rem" }} key={index}>
               <Card.Meta
                 avatar={
                   <Avatar
