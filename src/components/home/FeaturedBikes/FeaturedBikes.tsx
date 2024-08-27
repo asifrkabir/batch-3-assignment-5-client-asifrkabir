@@ -16,26 +16,23 @@ const FeaturedBikes = () => {
       <h1 style={{ textAlign: "center", marginBottom: "4rem" }}>
         Featured Bikes
       </h1>
-      <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-        <Row gutter={[24, 24]} justify="center">
-          {bikeData?.data?.map((bike) => {
-            return (
-              <Col
-                key={bike._id}
-                xs={24}
-                md={12}
-                lg={8}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  margin: "0rem 2rem",
-                }}>
-                <BikeCard bike={bike} />
-              </Col>
-            );
-          })}
-        </Row>
-      </div>
+      <Row gutter={[16, 16]}>
+        {bikeData?.data?.map((bike) => {
+          return (
+            <Col
+              key={bike._id}
+              sm={24}
+              md={12}
+              lg={8}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}>
+              <BikeCard bike={bike} />
+            </Col>
+          );
+        })}
+      </Row>
       <Flex style={{ marginTop: "3rem" }} justify="center">
         <Button size="large">View All</Button>
       </Flex>
