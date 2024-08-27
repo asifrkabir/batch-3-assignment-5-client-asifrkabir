@@ -144,8 +144,17 @@ const Navbar = () => {
                 <img
                   src={logo}
                   alt=""
-                  style={{ objectFit: "cover", maxWidth: "4rem" }}
+                  style={{ objectFit: "cover", maxWidth: "3rem" }}
                 />
+                <p
+                  style={{
+                    marginLeft: "0.4rem",
+                    fontSize: "1rem",
+                    fontWeight: "bold",
+                    color: "#1890ff",
+                  }}>
+                  Velocirent
+                </p>
               </div>
             </Link>
             <div
@@ -182,7 +191,7 @@ const Navbar = () => {
       </Header>
 
       <Drawer
-        title="Navigation"
+        title="Velocirent"
         placement="left"
         onClose={onClose}
         open={drawerVisible}

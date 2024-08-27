@@ -24,7 +24,7 @@ const AvailabilityCheck = () => {
   return (
     <div
       style={{
-        backgroundColor: "#3C474B",
+        backgroundColor: "#111111",
         padding: "2rem",
         marginTop: "2rem",
         borderRadius: "8px",
@@ -59,7 +59,16 @@ const AvailabilityCheck = () => {
               type="primary"
               size="large"
               onClick={handleCheckAvailability}
-              disabled={!dateRange}>
+              disabled={!dateRange}
+              style={
+                !dateRange
+                  ? {
+                      color: "gray",
+                    }
+                  : {
+                      color: "#fff",
+                    }
+              }>
               Check Availability
               <HiSparkles />
             </Button>
