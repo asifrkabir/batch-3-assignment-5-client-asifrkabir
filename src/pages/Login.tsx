@@ -1,7 +1,7 @@
 import { LoginOutlined } from "@ant-design/icons";
 import { Button, Col, Row } from "antd";
 import { FieldValues, SubmitHandler } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import loginImage from "../assets/images/login/login-image.jpg";
 import AppForm from "../components/form/AppForm";
@@ -16,6 +16,7 @@ import { verifyToken } from "../utils/verifyToken";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const dispatch = useAppDispatch();
 
@@ -40,7 +41,9 @@ const Login = () => {
         dispatch(setUser({ user, token: data.token! }));
 
         toast.success("Logged in", { id: toastId, duration: 2000 });
-        navigate(`/`);
+
+        const redirectTo = location.state?.from || "/";
+        navigate(redirectTo);
       } else if (isFetchBaseQueryError(res.error)) {
         const error = res.error as TError;
 

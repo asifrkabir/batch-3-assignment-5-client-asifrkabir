@@ -22,6 +22,11 @@ import { toast } from "sonner";
 
 const { Header } = Layout;
 
+type MenuItemType = {
+  key: string;
+  label: React.ReactNode;
+};
+
 const Navbar = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -36,17 +41,19 @@ const Navbar = () => {
     user = verifyToken(token) as TAuthUser;
   }
 
-  const defaultItems = [
+  const defaultItems: MenuItemType[] = [
     { key: "/", label: <NavLink to="/">Home</NavLink> },
     { key: "/about", label: <NavLink to="/about">About</NavLink> },
+    { key: "/bikes", label: <NavLink to="/bikes">All Bikes</NavLink> },
   ];
 
-  const userItems = [
+  const userItems: MenuItemType[] = [
     { key: "profile", label: <NavLink to="/profile">Profile</NavLink> },
     { key: "my-rentals", label: <NavLink to="/rentals">My Rentals</NavLink> },
+    { key: "/bikes", label: <NavLink to="/bikes">All Bikes</NavLink> },
   ];
 
-  const adminItems = [
+  const adminItems: MenuItemType[] = [
     {
       key: "adminDashboard",
       label: <NavLink to="/admin">Admin Dashboard</NavLink>,
@@ -55,15 +62,22 @@ const Navbar = () => {
       key: "manageUsers",
       label: <NavLink to="/manage-users">Manage Users</NavLink>,
     },
+    { key: "/bikes", label: <NavLink to="/bikes">All Bikes</NavLink> },
   ];
 
-  let menuItems = [...defaultItems];
+  // Map to ensure uniqueness by key
+  const menuItemsMap = new Map<string, MenuItemType>();
+
+  defaultItems.forEach((item) => menuItemsMap.set(item.key, item));
 
   if (user?.role === "user") {
-    menuItems = [...menuItems, ...userItems];
+    userItems.forEach((item) => menuItemsMap.set(item.key, item));
   } else if (user?.role === "admin") {
-    menuItems = [...menuItems, ...adminItems];
+    adminItems.forEach((item) => menuItemsMap.set(item.key, item));
   }
+
+  // Convert Map back to array
+  const menuItems: MenuItemType[] = Array.from(menuItemsMap.values());
 
   useEffect(() => {
     const handleResize = () => {
@@ -95,7 +109,7 @@ const Navbar = () => {
 
     toast.success("Logged out", { id: toastId, duration: 2000 });
 
-    navigate("/login");
+    navigate("/login", { replace: true });
   };
 
   const avatarMenuItems: MenuProps["items"] = [

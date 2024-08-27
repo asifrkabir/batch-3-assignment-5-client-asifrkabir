@@ -4,6 +4,8 @@ import AboutUs from "../pages/AboutUs";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import AllBikes from "../pages/Bike/AllBikes";
+import ProtectedRoute from "../components/layout/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +19,14 @@ const router = createBrowserRouter([
       {
         path: "/about",
         element: <AboutUs />,
+      },
+      {
+        path: "/bikes",
+        element: (
+          <ProtectedRoute>
+            <AllBikes />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
