@@ -55,12 +55,14 @@ const UnpaidTab = () => {
     {
       title: "Start Time",
       dataIndex: "startTime",
-      render: (text: string) => dayjs(text).format("YYYY-MM-DD HH:mm:ss"),
+      render: (date: string) =>
+        date && dayjs(date).format("YYYY-MM-DD HH:mm:ss"),
     },
     {
       title: "Return Time",
       dataIndex: "returnTime",
-      render: (text: string) => dayjs(text).format("YYYY-MM-DD HH:mm:ss"),
+      render: (date: string) =>
+        date && dayjs(date).format("YYYY-MM-DD HH:mm:ss"),
     },
     {
       title: "Total Cost (Tk.)",

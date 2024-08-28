@@ -1,8 +1,9 @@
 import { TBike } from "./bike.type";
+import { TUser } from "./user.type";
 
 export type TRental = {
   _id: string;
-  userId: string;
+  userId: TUser;
   bikeId: TBike;
   startTime: string;
   returnTime: string;
