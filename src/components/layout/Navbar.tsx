@@ -25,6 +25,7 @@ const { Header } = Layout;
 type MenuItemType = {
   key: string;
   label: React.ReactNode;
+  children?: MenuItemType[];
 };
 
 const Navbar = () => {
@@ -57,12 +58,14 @@ const Navbar = () => {
 
   const adminItems: MenuItemType[] = [
     {
-      key: "adminDashboard",
-      label: <NavLink to="/admin">Admin Dashboard</NavLink>,
-    },
-    {
-      key: "manageUsers",
-      label: <NavLink to="/manage-users">Manage Users</NavLink>,
+      key: "/users",
+      label: "Users",
+      children: [
+        {
+          key: "/manage-users",
+          label: <NavLink to="/manage-users">Manage Users</NavLink>,
+        },
+      ],
     },
     { key: "/bikes", label: <NavLink to="/bikes">All Bikes</NavLink> },
   ];

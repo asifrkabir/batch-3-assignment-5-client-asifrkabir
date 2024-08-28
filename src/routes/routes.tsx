@@ -9,6 +9,7 @@ import ProtectedRoute from "../components/layout/ProtectedRoute";
 import BikeDetails from "../pages/Bike/BikeDetails";
 import MyRentals from "../pages/Bike/MyRentals";
 import Profile from "../pages/Profile";
+import ManageUsers from "../pages/admin/ManageUsers";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <MyRentals />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/manage-users",
+        element: (
+          <ProtectedRoute role="admin">
+            <ManageUsers />
           </ProtectedRoute>
         ),
       },

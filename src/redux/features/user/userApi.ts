@@ -1,7 +1,32 @@
+import { TQueryParam, TResponseRedux, TUser } from "../../../types";
 import { baseApi } from "../../api/baseApi";
 
 const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    getAllUsers: builder.query({
+      query: (args) => {
+        const params = new URLSearchParams();
+
+        if (args) {
+          args.forEach((item: TQueryParam) => {
+            params.append(item.name, item.value as string);
+          });
+        }
+
+        return {
+          url: "/bikes",
+          method: "GET",
+          params,
+        };
+      },
+      providesTags: ["users"],
+      transformResponse: (response: TResponseRedux<TUser[]>) => {
+        return {
+          data: response.data,
+          meta: response.meta,
+        };
+      },
+    }),
     getUserProfile: builder.query({
       query: () => ({
         url: "/users/me",
@@ -15,9 +40,21 @@ const userApi = baseApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: ["profile"],
+      invalidatesTags: ["profile", "users"],
+    }),
+    deleteUser: builder.mutation({
+      query: (id) => ({
+        url: `/users/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["profile", "users"],
     }),
   }),
 });
 
-export const { useGetUserProfileQuery, useUpdateUserProfileMutation } = userApi;
+export const {
+  useGetAllUsersQuery,
+  useGetUserProfileQuery,
+  useUpdateUserProfileMutation,
+  useDeleteUserMutation,
+} = userApi;

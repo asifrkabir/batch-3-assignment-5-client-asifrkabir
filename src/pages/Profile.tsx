@@ -95,7 +95,7 @@ const Profile = () => {
             size={100}
             src="https://api.dicebear.com/7.x/miniavs/svg?seed=3"
             style={{
-              border: "2px solid #fff",
+              backgroundColor: "#fff",
             }}
           />
         </Col>

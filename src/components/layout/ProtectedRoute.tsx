@@ -25,6 +25,7 @@ const ProtectedRoute = ({ children, role }: ProtectedRouteProps) => {
   }
 
   if (role && role !== user?.role) {
+    //TODO: Route user to ErrorPage instead of logging them out
     dispatch(logout());
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
