@@ -1,6 +1,7 @@
 import { Tabs } from "antd";
 import UnpaidTab from "../../components/rental/UnpaidTab";
 import PaidTab from "../../components/rental/PaidTab";
+import Title from "antd/es/typography/Title";
 
 const items = [
   {
@@ -18,7 +19,9 @@ const items = [
 const MyRentals = () => {
   return (
     <div style={{ padding: "2rem" }}>
-      <h1 style={{ textAlign: "center", marginBottom: "2rem" }}>My Rentals</h1>
+      <Title level={2} style={{ marginBottom: "2rem" }}>
+        My Rentals
+      </Title>
 
       <Tabs defaultActiveKey="unpaid" type="card" size="large" items={items} />
     </div>

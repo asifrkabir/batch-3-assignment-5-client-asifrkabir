@@ -3,11 +3,13 @@ import {
   Dropdown,
   MenuProps,
   Modal,
+  Pagination,
   Table,
   TableColumnsType,
+  TableProps,
   Typography,
 } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import { MdOutlineEdit } from "react-icons/md";
 import { toast } from "sonner";
@@ -16,7 +18,7 @@ import {
   useGetAllUsersQuery,
   useUpdateUserRoleMutation,
 } from "../../redux/features/user/userApi";
-import { TError, TUser } from "../../types";
+import { TError, TQueryParam, TUser } from "../../types";
 import { isFetchBaseQueryError } from "../../utils/isFetchBaseQueryError";
 
 const { Title } = Typography;
@@ -29,14 +31,33 @@ const items = [
 ];
 
 const ManageUsers = () => {
+  const [params, setParams] = useState<TQueryParam[]>([]);
+  const [page, setPage] = useState(1);
+
   const [selectedUserId, setSelectedUserId] = useState("");
   const [deleteUser] = useDeleteUserMutation();
   const [updateUserRole] = useUpdateUserRoleMutation();
-  const { data, isFetching } = useGetAllUsersQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
-  const [page, setPage] = useState(1);
+  const { data, isFetching } = useGetAllUsersQuery([
+    { name: "sort", value: "-createdAt" },
+    { name: "limit", value: 10 },
+    { name: "page", value: page },
+    ...params,
+  ]);
+
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const tableData = data?.data?.map((user) => ({
+    key: user._id,
+    ...user,
+  }));
+
+  const metaData = data?.meta;
+
+  useEffect(() => {
+    if (tableData?.length === 0 && page > 1) {
+      setPage(page - 1);
+    }
+  }, [tableData, page]);
 
   const handleUserDeleteClick = (userId: string) => {
     setSelectedUserId(userId);
@@ -129,6 +150,16 @@ const ManageUsers = () => {
       title: "Role",
       dataIndex: "role",
       key: "role",
+      filters: [
+        {
+          text: "Admin",
+          value: "admin",
+        },
+        {
+          text: "User",
+          value: "user",
+        },
+      ],
     },
     {
       title: "Actions",
@@ -157,26 +188,49 @@ const ManageUsers = () => {
     },
   ];
 
-  const userData = data?.data?.map((user) => ({
-    key: user._id,
-    ...user,
-  }));
+  const onChange: TableProps<TUser>["onChange"] = (
+    _pagination,
+    filters,
+    _sorter,
+    extra
+  ) => {
+    if (extra.action === "filter") {
+      const queryParams: TQueryParam[] = [];
+
+      filters.role?.forEach((item) => {
+        queryParams.push({ name: "role", value: item });
+      });
+
+      setParams(queryParams);
+    }
+  };
 
   return (
     <div style={{ padding: "2rem" }}>
-      <Title level={2}>Manage Users</Title>
+      <Title level={2} style={{ marginBottom: "2rem" }}>
+        Manage Users
+      </Title>
+
       <Table
         columns={columns}
-        dataSource={userData}
-        pagination={{
-          current: page,
-          onChange: (page) => setPage(page),
-          total: data?.meta?.total,
-          pageSize: data?.meta?.limit,
-        }}
+        dataSource={tableData}
+        pagination={false}
         loading={isFetching}
-        style={{ marginBottom: "2rem" }}
+        onChange={onChange}
+        scroll={{ x: "max-content" }}
       />
+
+      <Pagination
+        total={metaData?.total || 0}
+        showTotal={(total, range) =>
+          `${range[0]}-${range[1] || 0} of ${total} items`
+        }
+        current={page}
+        onChange={(value) => setPage(value)}
+        pageSize={metaData?.limit || 10}
+        style={{ marginTop: "2rem", justifyContent: "end" }}
+      />
+
       <Modal
         title="Confirm Deletion"
         open={isModalVisible}

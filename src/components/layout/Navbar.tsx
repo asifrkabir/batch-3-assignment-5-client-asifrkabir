@@ -45,20 +45,19 @@ const Navbar = () => {
   const defaultItems: MenuItemType[] = [
     { key: "/", label: <NavLink to="/">Home</NavLink> },
     { key: "/about", label: <NavLink to="/about">About</NavLink> },
-    { key: "/bikes", label: <NavLink to="/bikes">All Bikes</NavLink> },
   ];
 
   const userItems: MenuItemType[] = [
+    { key: "/bikes", label: <NavLink to="/bikes">All Bikes</NavLink> },
     {
       key: "/my-rentals",
       label: <NavLink to="/my-rentals">My Rentals</NavLink>,
     },
-    { key: "/bikes", label: <NavLink to="/bikes">All Bikes</NavLink> },
   ];
 
   const adminItems: MenuItemType[] = [
     {
-      key: "/users",
+      key: "users",
       label: "Users",
       children: [
         {
@@ -67,7 +66,23 @@ const Navbar = () => {
         },
       ],
     },
-    { key: "/bikes", label: <NavLink to="/bikes">All Bikes</NavLink> },
+    {
+      key: "bikes",
+      label: "Bikes",
+      children: [
+        { key: "/bikes", label: <NavLink to="/bikes">All Bikes</NavLink> },
+      ],
+    },
+    {
+      key: "rentals",
+      label: "Rentals",
+      children: [
+        {
+          key: "/my-rentals",
+          label: <NavLink to="/my-rentals">My Rentals</NavLink>,
+        },
+      ],
+    },
   ];
 
   // Map to ensure uniqueness by key
