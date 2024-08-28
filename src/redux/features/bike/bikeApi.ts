@@ -3,6 +3,14 @@ import { baseApi } from "../../api/baseApi";
 
 const bikeApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    createBike: builder.mutation({
+      query: (bikeInfo) => ({
+        url: "/bikes",
+        method: "POST",
+        body: bikeInfo,
+      }),
+      invalidatesTags: ["bikes"],
+    }),
     getAllBikes: builder.query({
       query: (args) => {
         const params = new URLSearchParams();
@@ -37,4 +45,8 @@ const bikeApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllBikesQuery, useGetBikeByIdQuery } = bikeApi;
+export const {
+  useCreateBikeMutation,
+  useGetAllBikesQuery,
+  useGetBikeByIdQuery,
+} = bikeApi;

@@ -70,6 +70,10 @@ const Navbar = () => {
       key: "bikes",
       label: "Bikes",
       children: [
+        {
+          key: "/manage-bikes",
+          label: <NavLink to="/manage-bikes">Manage Bikes</NavLink>,
+        },
         { key: "/bikes", label: <NavLink to="/bikes">All Bikes</NavLink> },
       ],
     },
