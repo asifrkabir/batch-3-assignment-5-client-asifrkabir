@@ -97,6 +97,7 @@ const UnpaidTab = () => {
         current={page}
         onChange={(value) => setPage(value)}
         pageSize={metaData?.limit}
+        style={{marginTop: "2rem"}}
       />
     </>
   );
