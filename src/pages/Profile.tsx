@@ -1,4 +1,4 @@
-import { Avatar, Button, Col, Row, Typography } from "antd";
+import { Avatar, Button, Col, Row, Spin, Typography } from "antd";
 import { useState } from "react";
 import { MdOutlineEdit } from "react-icons/md";
 import AppForm from "../components/form/AppForm";
@@ -6,29 +6,22 @@ import AppInput from "../components/form/AppInput";
 import AppTextArea from "../components/form/AppTextArea";
 import { profileUpdateSchema } from "../schemas/user/user.schema";
 import { FieldValues, SubmitHandler } from "react-hook-form";
+import { useGetUserProfileQuery } from "../redux/features/user/userApi";
 
 const { Title, Text } = Typography;
 
-const user = {
-  _id: "66cd99c989cfe18dfd0c098c",
-  name: "User",
-  email: "user@mail.com",
-  phone: "123",
-  address: "Test Address",
-  role: "user",
-  createdAt: "2024-08-27T09:18:01.229Z",
-  updatedAt: "2024-08-27T09:18:01.229Z",
-  __v: 0,
-};
-
-const defaultValues = {
-  name: "User",
-  email: "user@mail.com",
-  phone: "123",
-  address: "Test Address",
-};
-
 const Profile = () => {
+  const { data, isLoading } = useGetUserProfileQuery(undefined);
+  const user = data?.data;
+  const defaultValues = user
+    ? {
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        address: user.address,
+      }
+    : {};
+
   const [isEditing, setIsEditing] = useState(false);
 
   const handleEdit = () => {
@@ -43,6 +36,10 @@ const Profile = () => {
     console.log("Updated values:", values);
     setIsEditing(false);
   };
+
+  if (isLoading) {
+    return <Spin size="large" />;
+  }
 
   return (
     <div style={{ padding: "2rem" }}>
