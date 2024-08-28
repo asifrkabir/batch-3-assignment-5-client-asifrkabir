@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+import React, { useEffect } from "react";
 import {
   useForm,
   FormProvider,
@@ -8,11 +8,6 @@ import {
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ZodSchema } from "zod";
-
-type TAppFormConfig = {
-  defaultValues?: Record<string, any>;
-  resolver?: any;
-};
 
 type AppFormProps = {
   onSubmit: SubmitHandler<FieldValues>;
@@ -29,17 +24,17 @@ const AppForm = ({
   defaultValues,
   resetAfterSubmit = false,
 }: AppFormProps) => {
-  const formConfig: TAppFormConfig = {};
+  const methods = useForm({
+    defaultValues,
+    resolver: schema ? zodResolver(schema) : undefined,
+  });
 
-  if (defaultValues) {
-    formConfig["defaultValues"] = defaultValues;
-  }
-
-  if (schema) {
-    formConfig["resolver"] = zodResolver(schema);
-  }
-
-  const methods = useForm(formConfig);
+  // Update form values when defaultValues changes
+  useEffect(() => {
+    if (defaultValues) {
+      methods.reset(defaultValues);
+    }
+  }, [defaultValues, methods]);
 
   const handleSubmit: SubmitHandler<FieldValues> = async (data) => {
     await onSubmit(data);

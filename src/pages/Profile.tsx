@@ -1,17 +1,26 @@
 import { Avatar, Button, Col, Row, Spin, Typography } from "antd";
 import { useState } from "react";
+import { FieldValues, SubmitHandler } from "react-hook-form";
 import { MdOutlineEdit } from "react-icons/md";
+import { toast } from "sonner";
 import AppForm from "../components/form/AppForm";
 import AppInput from "../components/form/AppInput";
 import AppTextArea from "../components/form/AppTextArea";
+import {
+  useGetUserProfileQuery,
+  useUpdateUserProfileMutation,
+} from "../redux/features/user/userApi";
 import { profileUpdateSchema } from "../schemas/user/user.schema";
-import { FieldValues, SubmitHandler } from "react-hook-form";
-import { useGetUserProfileQuery } from "../redux/features/user/userApi";
+import { TError } from "../types";
+import { isFetchBaseQueryError } from "../utils/isFetchBaseQueryError";
 
 const { Title, Text } = Typography;
 
 const Profile = () => {
-  const { data, isLoading } = useGetUserProfileQuery(undefined);
+  const [updateUserProfile] = useUpdateUserProfileMutation();
+  const { data, isLoading } = useGetUserProfileQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
   const user = data?.data;
   const defaultValues = user
     ? {
@@ -32,9 +41,37 @@ const Profile = () => {
     setIsEditing(false);
   };
 
-  const onSubmit: SubmitHandler<FieldValues> = (values) => {
-    console.log("Updated values:", values);
-    setIsEditing(false);
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const toastId = toast.loading("Processing...");
+
+    const userData = {
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      address: data.address,
+    };
+
+    try {
+      const res = await updateUserProfile(userData);
+
+      if ("data" in res && res.data) {
+        toast.success("Profile updated successfully", {
+          id: toastId,
+          duration: 2000,
+        });
+
+        setIsEditing(false);
+      } else if (isFetchBaseQueryError(res.error)) {
+        const error = res.error as TError;
+
+        toast.error(error.data.message, { id: toastId, duration: 2000 });
+      } else {
+        toast.error("Something went wrong", { id: toastId, duration: 2000 });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong", { id: toastId, duration: 2000 });
+    }
   };
 
   if (isLoading) {
