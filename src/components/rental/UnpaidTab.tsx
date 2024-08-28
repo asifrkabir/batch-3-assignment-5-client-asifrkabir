@@ -17,7 +17,6 @@ const UnpaidTab = () => {
 
   const {
     data: rentalData,
-    isLoading,
     isFetching,
   } = useGetAllRentalsByUserQuery(
     [{ name: "paymentStatus", value: "unpaid" }, ...params],
@@ -88,10 +87,6 @@ const UnpaidTab = () => {
       setParams(queryParams);
     }
   };
-
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
 
   return (
     <>

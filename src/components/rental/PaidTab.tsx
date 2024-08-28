@@ -14,11 +14,7 @@ const PaidTab = () => {
   const [params, setParams] = useState<TQueryParam[]>([]);
   const [page, setPage] = useState(1);
 
-  const {
-    data: rentalData,
-    isLoading,
-    isFetching,
-  } = useGetAllRentalsByUserQuery(
+  const { data: rentalData, isFetching } = useGetAllRentalsByUserQuery(
     [{ name: "paymentStatus", value: "paid" }, ...params],
     {
       refetchOnMountOrArgChange: true,
@@ -77,10 +73,6 @@ const PaidTab = () => {
       setParams(queryParams);
     }
   };
-
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
 
   return (
     <>
