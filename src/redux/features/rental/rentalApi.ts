@@ -20,7 +20,7 @@ const rentalApi = baseApi.injectEndpoints({
           params,
         };
       },
-      providesTags: ["rentals"],
+      // providesTags: ["rentals"],
       transformResponse: (response: TResponseRedux<TRental[]>) => {
         return {
           data: response.data,

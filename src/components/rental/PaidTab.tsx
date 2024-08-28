@@ -18,10 +18,12 @@ const PaidTab = () => {
     data: rentalData,
     isLoading,
     isFetching,
-  } = useGetAllRentalsByUserQuery([
-    { name: "paymentStatus", value: "paid" },
-    ...params,
-  ]);
+  } = useGetAllRentalsByUserQuery(
+    [{ name: "paymentStatus", value: "paid" }, ...params],
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
   const metaData = rentalData?.meta;
 
