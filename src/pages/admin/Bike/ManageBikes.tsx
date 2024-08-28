@@ -32,6 +32,8 @@ import { TBike, TError, TQueryParam } from "../../../types";
 import { convertDropdownOptionsToTableFilters } from "../../../utils/convertDropdownOptionsToTableFilters";
 import { isFetchBaseQueryError } from "../../../utils/isFetchBaseQueryError";
 import dayjs from "dayjs";
+import AppUpload from "../../../components/form/AppUpload";
+import { uploadImage } from "../../../utils/imageUpload";
 
 const { Title } = Typography;
 
@@ -63,6 +65,7 @@ const ManageBikes = () => {
         cc: bike.cc,
         pricePerHour: bike.pricePerHour,
         description: bike.description,
+        image: bike?.image,
       }
     : {};
 
@@ -102,14 +105,23 @@ const ManageBikes = () => {
   const handleAddBike: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("Processing...");
 
-    const bikeData = {
-      ...data,
-      year: Number(data.year.year()),
-      cc: Number(data.cc),
-      pricePerHour: Number(data.pricePerHour),
-    };
+    const image = data?.image && data?.image[0]?.originFileObj;
 
     try {
+      let imageData = null;
+
+      if (image) {
+        imageData = await uploadImage(image);
+      }
+
+      const bikeData = {
+        ...data,
+        year: Number(data.year.year()),
+        cc: Number(data.cc),
+        pricePerHour: Number(data.pricePerHour),
+        image: imageData?.data?.display_url,
+      };
+
       const res = await createBike(bikeData);
 
       if ("data" in res && res.data) {
@@ -135,17 +147,30 @@ const ManageBikes = () => {
   const handleUpdateBike: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("Processing...");
 
-    const bikeData = {
-      id: selectedBikeId,
-      data: {
-        ...data,
-        year: Number(data.year.year()),
-        cc: Number(data.cc),
-        pricePerHour: Number(data.pricePerHour),
-      },
-    };
+    const newImage = data?.newImage && data?.newImage[0]?.originFileObj;
 
     try {
+      let imageData = null;
+      let finalImageUrl = "";
+
+      if (newImage) {
+        imageData = await uploadImage(newImage);
+        finalImageUrl = imageData?.data?.display_url;
+      } else {
+        finalImageUrl = data?.image || "";
+      }
+
+      const bikeData = {
+        id: selectedBikeId,
+        data: {
+          ...data,
+          year: Number(data.year.year()),
+          cc: Number(data.cc),
+          pricePerHour: Number(data.pricePerHour),
+          image: finalImageUrl,
+        },
+      };
+
       const res = await updateBike(bikeData);
 
       if ("data" in res && res.data) {
@@ -351,7 +376,7 @@ const ManageBikes = () => {
         onCancel={handleAddBikeCancel}
         width={1200}
         footer={null}>
-        <AppForm onSubmit={handleAddBike}>
+        <AppForm onSubmit={handleAddBike} resetAfterSubmit>
           <Row gutter={[24, 24]} style={{ marginTop: "2rem" }}>
             <Col xs={24} md={12}>
               <AppInput
@@ -406,12 +431,23 @@ const ManageBikes = () => {
                 required
               />
             </Col>
-            <Col xs={24} span={24}>
+            <Col span={24}>
               <AppTextArea
                 name="description"
                 label="Description"
                 placeholder="Enter a description"
                 required
+              />
+            </Col>
+            <Col span={24}>
+              <AppUpload
+                name="image"
+                label="Upload Image"
+                accept=".jpg,.jpeg,.png"
+                multiple={false}
+                maxCount={1}
+                required
+                style={{ width: "100%" }}
               />
             </Col>
           </Row>
@@ -495,12 +531,30 @@ const ManageBikes = () => {
                 required
               />
             </Col>
-            <Col xs={24} span={24}>
+            <Col span={24}>
+              <AppInput
+                name="image"
+                label="Image URL"
+                placeholder="Enter Image URL"
+                type="text"
+              />
+            </Col>
+            <Col span={24}>
               <AppTextArea
                 name="description"
                 label="Description"
                 placeholder="Enter a description"
                 required
+              />
+            </Col>
+            <Col span={24}>
+              <AppUpload
+                name="newImage"
+                label="Upload Image"
+                accept=".jpg,.jpeg,.png"
+                multiple={false}
+                maxCount={1}
+                style={{ width: "100%" }}
               />
             </Col>
           </Row>

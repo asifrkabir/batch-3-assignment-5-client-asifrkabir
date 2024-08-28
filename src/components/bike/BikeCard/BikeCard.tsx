@@ -21,8 +21,10 @@ const BikeCard = ({ bike }: BikeCardProps) => {
       cover={
         <img
           alt={bike.name}
-          src="https://via.placeholder.com/300x200?text=Bike+Image" // Replace this with actual bike image
-          style={{ objectFit: "cover", width: "100%", height: "auto" }}
+          src={
+            bike?.image || "https://via.placeholder.com/300x200?text=Bike+Image"
+          }
+          style={{ objectFit: "cover", width: "100%", maxHeight: "12rem" }}
         />
       }>
       <Card.Meta
@@ -34,11 +36,11 @@ const BikeCard = ({ bike }: BikeCardProps) => {
           </div>
         }
       />
-      <Button type="primary" style={{ marginTop: "1rem", width: "100%" }}>
-        <Link to={`/bikes/${bike._id}`} style={{ color: "#fff" }}>
+      <Link to={`/bikes/${bike._id}`} style={{ color: "#fff" }}>
+        <Button type="primary" style={{ marginTop: "1rem", width: "100%" }}>
           View Details
-        </Link>
-      </Button>
+        </Button>
+      </Link>
     </Card>
   );
 };

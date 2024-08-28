@@ -54,13 +54,13 @@ const BikeDetails = () => {
 
   return (
     <div style={{ padding: "2rem" }}>
-      <Button style={{ marginBottom: "4rem" }}>
-        <Link
-          to="/bikes"
-          style={{ display: "flex", alignItems: "center", gap: 4 }}>
+      <Link
+        to="/bikes"
+        style={{ display: "flex", alignItems: "center", gap: 4 }}>
+        <Button style={{ marginBottom: "4rem" }}>
           <IoIosArrowRoundBack /> Back to All Bikes
-        </Link>
-      </Button>
+        </Button>
+      </Link>
 
       {error || bike === null ? (
         <div>
@@ -73,7 +73,7 @@ const BikeDetails = () => {
               <img
                 alt={bike.name}
                 src={
-                  bike.image ||
+                  bike?.image ||
                   "https://via.placeholder.com/500x500?text=Bike+Image"
                 }
                 style={{

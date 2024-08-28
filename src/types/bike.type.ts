@@ -10,4 +10,5 @@ export type TBike = {
   brand: string;
   createdAt: string;
   updatedAt: string;
+  image?: string;
 };
