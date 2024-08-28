@@ -36,15 +36,14 @@ const ManageUsers = () => {
     refetchOnMountOrArgChange: true,
   });
   const [page, setPage] = useState(1);
-  const [selectedUser, setSelectedUser] = useState<TUser | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const handleDelete = (user: TUser) => {
-    setSelectedUser(user);
+  const handleUserDeleteClick = (userId: string) => {
+    setSelectedUserId(userId);
     setIsModalVisible(true);
   };
 
-  const handleUpdateRole: MenuProps["onClick"] = async (data) => {
+  const handleUpdateUserRole: MenuProps["onClick"] = async (data) => {
     const toastId = toast.loading("Processing...");
 
     const userData = {
@@ -75,11 +74,12 @@ const ManageUsers = () => {
     }
   };
 
-  const confirmDelete = async () => {
-    if (selectedUser) {
+  const handleDeleteUser = async () => {
+    if (selectedUserId !== "") {
       const toastId = toast.loading("Deleting user...");
+
       try {
-        const res = await deleteUser(selectedUser._id);
+        const res = await deleteUser(selectedUserId);
 
         if ("data" in res && res.data) {
           toast.success("User deleted successfully", { id: toastId });
@@ -94,19 +94,19 @@ const ManageUsers = () => {
         toast.error("Something went wrong", { id: toastId });
       } finally {
         setIsModalVisible(false);
-        setSelectedUser(null);
+        setSelectedUserId("");
       }
     }
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    setSelectedUser(null);
+    setSelectedUserId("");
   };
 
   const roleUpdateMenuProps = {
     items,
-    onClick: handleUpdateRole,
+    onClick: handleUpdateUserRole,
   };
 
   const columns: TableColumnsType<TUser> = [
@@ -148,7 +148,7 @@ const ManageUsers = () => {
           <Button
             danger
             icon={<FaTrashAlt />}
-            onClick={() => handleDelete(user)}
+            onClick={() => handleUserDeleteClick(user._id)}
             disabled={user.role === "admin"}>
             Delete
           </Button>
@@ -180,11 +180,18 @@ const ManageUsers = () => {
       <Modal
         title="Confirm Deletion"
         open={isModalVisible}
-        onOk={confirmDelete}
+        onOk={handleDeleteUser}
         onCancel={handleCancel}
         okText="Delete"
         cancelText="Cancel"
-        confirmLoading={false}>
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            Cancel
+          </Button>,
+          <Button key="submit" type="primary" danger onClick={handleDeleteUser}>
+            Delete
+          </Button>,
+        ]}>
         <p>Are you sure you want to delete this user?</p>
       </Modal>
     </div>
