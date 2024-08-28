@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useGetAllRentalsByUserQuery } from "../../redux/features/rental/rentalApi";
 import { TQueryParam } from "../../types";
 import { TRental } from "../../types/rental.type";
-import { Pagination, Table, TableColumnsType, TableProps } from "antd";
+import { Button, Pagination, Table, TableColumnsType, TableProps } from "antd";
 import dayjs from "dayjs";
+import { FaCreditCard } from "react-icons/fa6";
 
 export type TTableData = Pick<
   TRental,
@@ -61,6 +62,16 @@ const UnpaidTab = () => {
       title: "Total Cost (Tk.)",
       dataIndex: "totalCost",
     },
+    {
+      title: "Action",
+      render: (item) => {
+        return (
+          <Button type="primary" onClick={() => console.log(item)}>
+            Pay Now <FaCreditCard />
+          </Button>
+        );
+      },
+    },
   ];
 
   const onChange: TableProps<TTableData>["onChange"] = (
@@ -97,7 +108,7 @@ const UnpaidTab = () => {
         current={page}
         onChange={(value) => setPage(value)}
         pageSize={metaData?.limit}
-        style={{marginTop: "2rem"}}
+        style={{ marginTop: "2rem" }}
       />
     </>
   );
