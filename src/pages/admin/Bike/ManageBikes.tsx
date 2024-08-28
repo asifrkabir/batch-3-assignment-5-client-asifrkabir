@@ -1,9 +1,7 @@
 import {
   Button,
   Col,
-  Dropdown,
   Flex,
-  MenuProps,
   Modal,
   Pagination,
   Row,
@@ -13,46 +11,35 @@ import {
   Typography,
 } from "antd";
 import { useEffect, useState } from "react";
+import { FieldValues, SubmitHandler } from "react-hook-form";
 import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import { MdOutlineEdit } from "react-icons/md";
 import { toast } from "sonner";
-import {
-  useCreateBikeMutation,
-  useGetAllBikesQuery,
-} from "../../../redux/features/bike/bikeApi";
-import {
-  useDeleteUserMutation,
-  useUpdateUserRoleMutation,
-} from "../../../redux/features/user/userApi";
-import { TBike, TError, TQueryParam } from "../../../types";
-import { isFetchBaseQueryError } from "../../../utils/isFetchBaseQueryError";
+import AppDatePicker from "../../../components/form/AppDatePicker";
 import AppForm from "../../../components/form/AppForm";
 import AppInput from "../../../components/form/AppInput";
-import { FieldValues, SubmitHandler } from "react-hook-form";
 import AppSelect from "../../../components/form/AppSelect";
 import AppTextArea from "../../../components/form/AppTextArea";
-import AppDatePicker from "../../../components/form/AppDatePicker";
 import { brandOptions, modelOptions } from "../../../constants/bike";
+import {
+  useCreateBikeMutation,
+  useDeleteBikeMutation,
+  useGetAllBikesQuery,
+  useGetBikeByIdQuery,
+  useUpdateBikeByIdMutation,
+} from "../../../redux/features/bike/bikeApi";
+import { TBike, TError, TQueryParam } from "../../../types";
 import { convertDropdownOptionsToTableFilters } from "../../../utils/convertDropdownOptionsToTableFilters";
+import { isFetchBaseQueryError } from "../../../utils/isFetchBaseQueryError";
+import dayjs from "dayjs";
 
 const { Title } = Typography;
-
-const items = [
-  {
-    label: "Admin",
-    key: "admin",
-  },
-];
 
 const ManageBikes = () => {
   const [params, setParams] = useState<TQueryParam[]>([]);
   const [page, setPage] = useState(1);
-
-  const [createBike] = useCreateBikeMutation();
-
   const [selectedBikeId, setSelectedBikeId] = useState("");
-  const [deleteUser] = useDeleteUserMutation();
-  const [updateUserRole] = useUpdateUserRoleMutation();
+
   const { data, isFetching } = useGetAllBikesQuery([
     { name: "sort", value: "-createdAt" },
     { name: "limit", value: 10 },
@@ -60,7 +47,28 @@ const ManageBikes = () => {
     ...params,
   ]);
 
+  const [createBike] = useCreateBikeMutation();
+  const [updateBike] = useUpdateBikeByIdMutation();
+  const [deleteBike] = useDeleteBikeMutation();
+  const { data: bikeData } = useGetBikeByIdQuery(selectedBikeId, {
+    skip: !selectedBikeId,
+  });
+  const bike = bikeData?.data;
+  const selectedBikeValues = bike
+    ? {
+        name: bike.name,
+        brand: bike.brand,
+        model: bike.model,
+        year: dayjs().year(bike.year).startOf("year"),
+        cc: bike.cc,
+        pricePerHour: bike.pricePerHour,
+        description: bike.description,
+      }
+    : {};
+
   const [isAddBikeModalVisible, setIsAddBikeModalVisible] = useState(false);
+  const [isUpdateBikeModalVisible, setIsUpdateBikeModalVisible] =
+    useState(false);
   const [isDeleteBikeModalVisible, setIsDeleteBikeModalVisible] =
     useState(false);
 
@@ -79,6 +87,11 @@ const ManageBikes = () => {
 
   const openBikeAddModal = () => {
     setIsAddBikeModalVisible(true);
+  };
+
+  const openBikeUpdateModal = (bikeId: string) => {
+    setSelectedBikeId(bikeId);
+    setIsUpdateBikeModalVisible(true);
   };
 
   const openBikeDeleteModal = (bikeId: string) => {
@@ -119,24 +132,29 @@ const ManageBikes = () => {
     }
   };
 
-  const handleUpdateUserRole: MenuProps["onClick"] = async (data) => {
+  const handleUpdateBike: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("Processing...");
 
-    const userData = {
+    const bikeData = {
       id: selectedBikeId,
       data: {
-        role: data.key,
+        ...data,
+        year: Number(data.year.year()),
+        cc: Number(data.cc),
+        pricePerHour: Number(data.pricePerHour),
       },
     };
 
     try {
-      const res = await updateUserRole(userData);
+      const res = await updateBike(bikeData);
 
       if ("data" in res && res.data) {
-        toast.success("Role updated successfully", {
+        toast.success("Bike updated successfully", {
           id: toastId,
           duration: 2000,
         });
+
+        setIsUpdateBikeModalVisible(false);
       } else if (isFetchBaseQueryError(res.error)) {
         const error = res.error as TError;
 
@@ -150,15 +168,15 @@ const ManageBikes = () => {
     }
   };
 
-  const handleDeleteUser = async () => {
+  const handleDeleteBike = async () => {
     if (selectedBikeId !== "") {
-      const toastId = toast.loading("Deleting user...");
+      const toastId = toast.loading("Processing...");
 
       try {
-        const res = await deleteUser(selectedBikeId);
+        const res = await deleteBike(selectedBikeId);
 
         if ("data" in res && res.data) {
-          toast.success("User deleted successfully", { id: toastId });
+          toast.success("Bike deleted successfully", { id: toastId });
         } else if (isFetchBaseQueryError(res.error)) {
           const error = res.error as TError;
           toast.error(error.data.message, { id: toastId });
@@ -180,14 +198,14 @@ const ManageBikes = () => {
     setSelectedBikeId("");
   };
 
-  const handleDeleteBikeCancel = () => {
-    setIsDeleteBikeModalVisible(false);
+  const handleUpdateBikeCancel = () => {
+    setIsUpdateBikeModalVisible(false);
     setSelectedBikeId("");
   };
 
-  const roleUpdateMenuProps = {
-    items,
-    onClick: handleUpdateUserRole,
+  const handleDeleteBikeCancel = () => {
+    setIsDeleteBikeModalVisible(false);
+    setSelectedBikeId("");
   };
 
   const columns: TableColumnsType<TBike> = [
@@ -247,23 +265,20 @@ const ManageBikes = () => {
     {
       title: "Actions",
       key: "actions",
-      render: (user) => (
+      render: (bike) => (
         <div>
-          <Dropdown menu={roleUpdateMenuProps} trigger={["click"]}>
-            <Button
-              type="primary"
-              icon={<MdOutlineEdit />}
-              onClick={() => setSelectedBikeId(user._id)}
-              style={{ marginRight: "8px" }}
-              disabled={user.role === "admin"}>
-              Update Role
-            </Button>
-          </Dropdown>
+          <Button
+            type="primary"
+            icon={<MdOutlineEdit />}
+            onClick={() => openBikeUpdateModal(bike._id)}
+            style={{ marginRight: "8px" }}>
+            Update Bike
+          </Button>
           <Button
             danger
             icon={<FaTrashAlt />}
-            onClick={() => openBikeDeleteModal(user._id)}
-            disabled={user.role === "admin"}>
+            onClick={() => openBikeDeleteModal(bike._id)}
+            disabled={bike.role === "admin"}>
             Delete
           </Button>
         </div>
@@ -333,7 +348,6 @@ const ManageBikes = () => {
       <Modal
         title="Add Bike"
         open={isAddBikeModalVisible}
-        onOk={handleDeleteUser}
         onCancel={handleAddBikeCancel}
         width={1200}
         footer={null}>
@@ -421,15 +435,104 @@ const ManageBikes = () => {
       </Modal>
 
       <Modal
+        title="Update Bike"
+        open={isUpdateBikeModalVisible}
+        onCancel={handleUpdateBikeCancel}
+        width={1200}
+        footer={null}>
+        <AppForm onSubmit={handleUpdateBike} defaultValues={selectedBikeValues}>
+          <Row gutter={[24, 24]} style={{ marginTop: "2rem" }}>
+            <Col xs={24} md={12}>
+              <AppInput
+                name="name"
+                label="Name"
+                placeholder="Enter Name"
+                required
+              />
+            </Col>
+            <Col xs={24} md={12}>
+              <AppSelect
+                name="brand"
+                label="Brand"
+                options={brandOptions}
+                placeholder="Select Brand"
+                required
+              />
+            </Col>
+            <Col xs={24} md={12}>
+              <AppSelect
+                name="model"
+                label="Model"
+                options={modelOptions}
+                placeholder="Select Model"
+                required
+              />
+            </Col>
+            <Col xs={24} md={12}>
+              <AppDatePicker
+                name="year"
+                label="Year"
+                picker="year"
+                placeholder="Select Year"
+                required
+              />
+            </Col>
+            <Col xs={24} md={12}>
+              <AppInput
+                name="cc"
+                label="CC"
+                placeholder="Enter CC"
+                type="number"
+                required
+              />
+            </Col>
+            <Col xs={24} md={12}>
+              <AppInput
+                name="pricePerHour"
+                label="Price Per Hour"
+                placeholder="Enter Price Per Hour"
+                type="number"
+                required
+              />
+            </Col>
+            <Col xs={24} span={24}>
+              <AppTextArea
+                name="description"
+                label="Description"
+                placeholder="Enter a description"
+                required
+              />
+            </Col>
+          </Row>
+
+          <div
+            style={{
+              marginTop: "3rem",
+              display: "flex",
+              justifyContent: "end",
+            }}>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+            <Button
+              style={{ marginLeft: "10px" }}
+              onClick={handleUpdateBikeCancel}>
+              Cancel
+            </Button>
+          </div>
+        </AppForm>
+      </Modal>
+
+      <Modal
         title="Confirm Deletion"
         open={isDeleteBikeModalVisible}
-        onOk={handleDeleteUser}
+        onOk={handleDeleteBike}
         onCancel={handleDeleteBikeCancel}
         footer={[
           <Button key="back" onClick={handleDeleteBikeCancel}>
             Cancel
           </Button>,
-          <Button key="submit" type="primary" danger onClick={handleDeleteUser}>
+          <Button key="submit" type="primary" danger onClick={handleDeleteBike}>
             Delete
           </Button>,
         ]}>

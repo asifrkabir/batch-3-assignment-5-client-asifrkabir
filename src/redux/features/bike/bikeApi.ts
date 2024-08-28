@@ -42,6 +42,21 @@ const bikeApi = baseApi.injectEndpoints({
       }),
       providesTags: ["bikes"],
     }),
+    updateBikeById: builder.mutation({
+      query: (options) => ({
+        url: `/bikes/${options.id}`,
+        method: "PUT",
+        body: options.data,
+      }),
+      invalidatesTags: ["bikes"],
+    }),
+    deleteBike: builder.mutation({
+      query: (id) => ({
+        url: `/bikes/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["bikes"],
+    }),
   }),
 });
 
@@ -49,4 +64,6 @@ export const {
   useCreateBikeMutation,
   useGetAllBikesQuery,
   useGetBikeByIdQuery,
+  useUpdateBikeByIdMutation,
+  useDeleteBikeMutation
 } = bikeApi;
