@@ -5,23 +5,23 @@ import { Controller, useFormContext } from "react-hook-form";
 type AppInputProps = {
   name: string;
   label: string;
-  type?: string; // e.g., 'text', 'password', 'number'
+  type?: string;
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
   size?: SizeType;
-  style?: React.CSSProperties; // Allows custom styling
+  style?: React.CSSProperties;
 };
 
 const AppInput: React.FC<AppInputProps> = ({
   name,
   label,
-  type = "text", // Default type is 'text'
+  type = "text",
   placeholder,
   required = false,
   disabled = false,
   size = "middle",
-  style = {}, // Default to empty object
+  style = {},
 }) => {
   const { control } = useFormContext();
 

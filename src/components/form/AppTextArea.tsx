@@ -8,8 +8,8 @@ type AppTextAreaProps = {
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
-  style?: React.CSSProperties; // Allows custom styling
-  rows?: number; // Number of rows for the textarea
+  style?: React.CSSProperties;
+  rows?: number;
   size?: SizeType;
 };
 
@@ -19,8 +19,8 @@ const AppTextArea: React.FC<AppTextAreaProps> = ({
   placeholder,
   required = false,
   disabled = false,
-  style = {}, // Default to an empty object
-  rows = 4, // Default number of rows
+  style = {},
+  rows = 4,
   size = "middle",
 }) => {
   const { control } = useFormContext();

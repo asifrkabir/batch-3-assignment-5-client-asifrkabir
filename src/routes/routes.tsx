@@ -8,6 +8,7 @@ import AllBikes from "../pages/Bike/AllBikes";
 import ProtectedRoute from "../components/layout/ProtectedRoute";
 import BikeDetails from "../pages/Bike/BikeDetails";
 import MyRentals from "../pages/Bike/MyRentals";
+import Profile from "../pages/Profile";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,14 @@ const router = createBrowserRouter([
       {
         path: "/about",
         element: <AboutUs />,
+      },
+      {
+        path: "/profile",
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/bikes",

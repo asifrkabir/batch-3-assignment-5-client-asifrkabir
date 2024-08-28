@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import {
   useForm,
@@ -8,24 +9,48 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ZodSchema } from "zod";
 
-type AppFormProps<T extends FieldValues> = {
-  schema?: ZodSchema<T>; // Optional validation schema
-  onSubmit: SubmitHandler<T>; // Function to call on form submit
-  children: React.ReactNode; // Form fields and other components
+type TAppFormConfig = {
+  defaultValues?: Record<string, any>;
+  resolver?: any;
 };
 
-const AppForm = <T extends FieldValues>({
-  schema,
+type AppFormProps = {
+  onSubmit: SubmitHandler<FieldValues>;
+  children: React.ReactNode;
+  schema?: ZodSchema<FieldValues>;
+  defaultValues?: Record<string, any>;
+  resetAfterSubmit?: boolean;
+};
+
+const AppForm = ({
   onSubmit,
   children,
-}: AppFormProps<T>) => {
-  const methods = useForm<T>({
-    resolver: schema ? zodResolver(schema) : undefined,
-  });
+  schema,
+  defaultValues,
+  resetAfterSubmit = false,
+}: AppFormProps) => {
+  const formConfig: TAppFormConfig = {};
+
+  if (defaultValues) {
+    formConfig["defaultValues"] = defaultValues;
+  }
+
+  if (schema) {
+    formConfig["resolver"] = zodResolver(schema);
+  }
+
+  const methods = useForm(formConfig);
+
+  const handleSubmit: SubmitHandler<FieldValues> = async (data) => {
+    await onSubmit(data);
+    if (resetAfterSubmit) {
+      methods.reset();
+    }
+  };
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>{children}</form>
+      <form onSubmit={methods.handleSubmit(handleSubmit)}>{children}</form>
     </FormProvider>
   );
 };
