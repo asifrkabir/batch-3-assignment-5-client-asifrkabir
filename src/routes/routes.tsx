@@ -11,6 +11,7 @@ import MyRentals from "../pages/Bike/MyRentals";
 import Profile from "../pages/Profile";
 import ManageUsers from "../pages/admin/ManageUsers";
 import ManageBikes from "../pages/admin/Bike/ManageBikes";
+import ManageRentals from "../pages/admin/ManageRentals";
 
 const router = createBrowserRouter([
   {
@@ -70,6 +71,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute role="admin">
             <ManageBikes />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/manage-rentals",
+        element: (
+          <ProtectedRoute role="admin">
+            <ManageRentals />
           </ProtectedRoute>
         ),
       },

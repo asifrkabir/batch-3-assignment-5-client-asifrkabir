@@ -82,6 +82,10 @@ const Navbar = () => {
       label: "Rentals",
       children: [
         {
+          key: "/manage-rentals",
+          label: <NavLink to="/manage-rentals">Return Bike</NavLink>,
+        },
+        {
           key: "/my-rentals",
           label: <NavLink to="/my-rentals">My Rentals</NavLink>,
         },
