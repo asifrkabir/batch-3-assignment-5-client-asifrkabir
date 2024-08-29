@@ -57,7 +57,7 @@ const rentalApi = baseApi.injectEndpoints({
         url: `/rentals/${options.id}/return`,
         method: "PUT",
       }),
-      invalidatesTags: ["rentals"],
+      invalidatesTags: ["rentals", "bikes"],
     }),
   }),
 });

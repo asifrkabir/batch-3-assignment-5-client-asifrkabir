@@ -72,7 +72,10 @@ const UnpaidTab = () => {
       title: "Action",
       render: (item) => {
         return (
-          <Button type="primary" onClick={() => console.log(item)}>
+          <Button
+            type="primary"
+            disabled={!item.returnTime}
+            onClick={() => console.log(item)}>
             Pay Now <FaCreditCard />
           </Button>
         );
