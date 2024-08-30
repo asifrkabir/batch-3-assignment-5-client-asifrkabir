@@ -1,4 +1,4 @@
-import { Button, Card, Modal } from "antd";
+import { Button, Card, Modal, Space } from "antd";
 import { useState } from "react";
 import { Wheel } from "react-custom-roulette";
 import { Link } from "react-router-dom";
@@ -108,23 +108,26 @@ const WinCoupon = () => {
                 alignItems: "center",
               }}>
               <Wheel
+                outerBorderWidth={4}
+                radiusLineWidth={4}
                 mustStartSpinning={mustSpin}
                 prizeNumber={prizeNumber}
                 data={couponItems}
-                spinDuration={0.1}
+                spinDuration={0.4}
                 onStopSpinning={() => {
                   setMustSpin(false);
                   handleCouponWin(prizeNumber);
                 }}
               />
               <Button
+                size="large"
                 type="primary"
                 onClick={handleSpinClick}
                 style={{
                   marginTop: "2rem",
                   padding: "1rem 2rem",
                 }}>
-                Spin the Wheel!
+                Spin the Wheel
               </Button>
             </div>
           )}
@@ -153,12 +156,18 @@ const WinCoupon = () => {
             OK
           </Button>,
         ]}>
-        <p>
-          Coupon Code: <strong>{wonCoupon.code}</strong>
-        </p>
-        <p>
-          Discount: <strong>{wonCoupon.discount}%</strong>
-        </p>
+        <Space direction="vertical">
+          <p>
+            Coupon Code: <strong>{wonCoupon.code}</strong>
+          </p>
+          <p>
+            Discount: <strong>{wonCoupon.discount}%</strong>
+          </p>
+          <p>
+            <span style={{ color: "red" }}>*</span> You can apply this coupon
+            while checking out after returning the bike.
+          </p>
+        </Space>
       </Modal>
     </>
   );

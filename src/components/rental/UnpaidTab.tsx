@@ -1,11 +1,25 @@
 import { useEffect, useState } from "react";
 import { useGetAllRentalsByUserQuery } from "../../redux/features/rental/rentalApi";
-import { TQueryParam } from "../../types";
+import { TAuthUser, TQueryParam } from "../../types";
 import { TRental } from "../../types/rental.type";
-import { Button, Pagination, Table, TableColumnsType, TableProps } from "antd";
+import {
+  Button,
+  Modal,
+  Pagination,
+  Table,
+  TableColumnsType,
+  TableProps,
+} from "antd";
 import dayjs from "dayjs";
 import { FaCreditCard } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../redux/hooks";
+import { selectCurrentToken } from "../../redux/features/auth/authSlice";
+import { verifyToken } from "../../utils/verifyToken";
+import {
+  useGetUserCouponByUserIdQuery,
+  useUpdateUserCouponMutation,
+} from "../../redux/features/coupon/couponApi";
 
 type TTableData = Pick<
   TRental,
@@ -15,7 +29,26 @@ type TTableData = Pick<
 const UnpaidTab = () => {
   const [params, setParams] = useState<TQueryParam[]>([]);
   const [page, setPage] = useState(1);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedRental, setSelectedRental] = useState<TRental | null>(null);
+  const [discountedCost, setDiscountedCost] = useState(0);
+
   const navigate = useNavigate();
+
+  const [updateUserCoupon] = useUpdateUserCouponMutation();
+
+  const token = useAppSelector(selectCurrentToken);
+  let user = null;
+
+  if (token) {
+    user = verifyToken(token) as TAuthUser;
+  }
+
+  const { data: userCouponData } = useGetUserCouponByUserIdQuery(user?.userId, {
+    skip: !user,
+  });
+  const existingCouponData = userCouponData?.data;
+  console.log(existingCouponData);
 
   const { data: rentalData, isFetching } = useGetAllRentalsByUserQuery(
     [
@@ -45,13 +78,38 @@ const UnpaidTab = () => {
   }, [tableData, page]);
 
   const goToPaymentPage = (data: TRental) => {
-    const paymentData = {
-      paymentType: "return",
-      paymentAmount: data.totalCost,
-      rentalId: data._id,
-    };
+    if (existingCouponData) {
+      const discount =
+        (existingCouponData.coupon.discountPercentage / 100) * data.totalCost;
+      const finalCost = data.totalCost - discount;
 
-    navigate("/payment", { state: paymentData });
+      setSelectedRental(data);
+      setDiscountedCost(finalCost);
+      setModalVisible(true);
+    } else {
+      navigate("/payment", {
+        state: {
+          paymentType: "return",
+          paymentAmount: data.totalCost,
+          rentalId: data._id,
+        },
+      });
+    }
+  };
+
+  const handleProceedToPayment = async () => {
+    if (selectedRental) {
+      await updateUserCoupon(existingCouponData?._id);
+
+      navigate("/payment", {
+        state: {
+          paymentType: "return",
+          paymentAmount: discountedCost,
+          rentalId: selectedRental._id,
+        },
+      });
+      setModalVisible(false);
+    }
   };
 
   const columns: TableColumnsType<TTableData> = [
@@ -129,6 +187,30 @@ const UnpaidTab = () => {
         pageSize={metaData?.limit || 10}
         style={{ marginTop: "2rem", justifyContent: "end" }}
       />
+
+      <Modal
+        title="Coupon Applied!"
+        open={modalVisible}
+        onCancel={() => setModalVisible(false)}
+        footer={[
+          <Button key="cancel" onClick={() => setModalVisible(false)}>
+            Cancel
+          </Button>,
+          <Button key="proceed" type="primary" onClick={handleProceedToPayment}>
+            Proceed
+          </Button>,
+        ]}>
+        <p>
+          Original Cost: <strong>Tk.{selectedRental?.totalCost}</strong>
+        </p>
+        <p>
+          Discount:{" "}
+          <strong>{existingCouponData?.coupon?.discountPercentage}%</strong>
+        </p>
+        <p>
+          Final Cost: <strong>Tk.{discountedCost}</strong>
+        </p>
+      </Modal>
     </>
   );
 };
