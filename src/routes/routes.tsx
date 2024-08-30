@@ -15,6 +15,7 @@ import ManageRentals from "../pages/admin/ManageRentals";
 import Payment from "../pages/Payment/Payment";
 import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 import ErrorPage from "../pages/ErrorPage";
+import ManageCoupons from "../pages/admin/ManageCoupons";
 
 const router = createBrowserRouter([
   {
@@ -99,6 +100,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute role="admin">
             <ManageRentals />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/manage-coupons",
+        element: (
+          <ProtectedRoute role="admin">
+            <ManageCoupons />
           </ProtectedRoute>
         ),
       },

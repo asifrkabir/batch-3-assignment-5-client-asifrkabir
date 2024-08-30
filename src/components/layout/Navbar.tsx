@@ -91,6 +91,16 @@ const Navbar = () => {
         },
       ],
     },
+    {
+      key: "coupons",
+      label: "Coupons",
+      children: [
+        {
+          key: "/manage-coupons",
+          label: <NavLink to="/manage-coupons">Manage Coupons</NavLink>,
+        },
+      ],
+    },
   ];
 
   // Map to ensure uniqueness by key

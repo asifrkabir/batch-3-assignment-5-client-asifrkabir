@@ -45,7 +45,7 @@ const couponApi = baseApi.injectEndpoints({
     updateCouponById: builder.mutation({
       query: (options) => ({
         url: `/coupons/${options.id}`,
-        method: "PUT",
+        method: "PATCH",
         body: options.data,
       }),
       invalidatesTags: ["coupons"],
