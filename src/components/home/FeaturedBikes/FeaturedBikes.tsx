@@ -1,10 +1,12 @@
 import { Button, Col, Flex, Row } from "antd";
 import BikeCard from "../../bike/BikeCard/BikeCard";
 import { useGetAllBikesQuery } from "../../../redux/features/bike/bikeApi";
+import { Link } from "react-router-dom";
 
 const FeaturedBikes = () => {
   const { data: bikeData, isLoading } = useGetAllBikesQuery([
     { name: "limit", value: 6 },
+    { name: "isAvailable", value: true },
   ]);
 
   if (isLoading) {
@@ -34,7 +36,9 @@ const FeaturedBikes = () => {
         })}
       </Row>
       <Flex style={{ marginTop: "3rem" }} justify="center">
-        <Button size="large">View All</Button>
+        <Link to="/bikes">
+          <Button size="large">View All</Button>
+        </Link>
       </Flex>
     </>
   );

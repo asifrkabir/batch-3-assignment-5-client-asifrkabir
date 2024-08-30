@@ -1,4 +1,4 @@
-import { Col, Empty, Row, Select, Spin, DatePicker } from "antd";
+import { Col, Empty, Row, Select, Spin, DatePicker, Input } from "antd";
 import { useEffect, useState } from "react";
 import BikeCard from "../../components/bike/BikeCard/BikeCard";
 import { useGetAllBikesQuery } from "../../redux/features/bike/bikeApi";
@@ -51,6 +51,13 @@ const AllBikes = () => {
       <div style={{ marginBottom: "2rem", textAlign: "center" }}>
         <Row justify="center" gutter={[16, 16]}>
           <Col>
+            <Input
+              placeholder="Search by name, brand, model or description"
+              style={{ width: 200 }}
+              onChange={(e) => handleFilterChange("searchTerm", e.target.value)}
+            />
+          </Col>
+          <Col>
             <Select
               placeholder="Select Brand"
               style={{ width: 200 }}
@@ -61,13 +68,11 @@ const AllBikes = () => {
             </Select>
           </Col>
           <Col>
-            <Select
-              placeholder="Select Model"
+            <Input
+              placeholder="Enter Full Model"
               style={{ width: 200 }}
-              onChange={(value) => handleFilterChange("model", value)}>
-              <Option value="">All Models</Option>
-              <Option value="X1">X1</Option>
-            </Select>
+              onChange={(e) => handleFilterChange("model", e.target.value)}
+            />
           </Col>
           <Col>
             <DatePicker

@@ -10,6 +10,7 @@ import {
   TableProps,
   Typography,
 } from "antd";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
@@ -20,7 +21,8 @@ import AppForm from "../../../components/form/AppForm";
 import AppInput from "../../../components/form/AppInput";
 import AppSelect from "../../../components/form/AppSelect";
 import AppTextArea from "../../../components/form/AppTextArea";
-import { brandOptions, modelOptions } from "../../../constants/bike";
+import AppUpload from "../../../components/form/AppUpload";
+import { brandOptions } from "../../../constants/bike";
 import {
   useCreateBikeMutation,
   useDeleteBikeMutation,
@@ -28,12 +30,14 @@ import {
   useGetBikeByIdQuery,
   useUpdateBikeByIdMutation,
 } from "../../../redux/features/bike/bikeApi";
+import {
+  bikeCreateSchema,
+  bikeUpdateSchema,
+} from "../../../schemas/bike/bike.schema";
 import { TBike, TError, TQueryParam } from "../../../types";
 import { convertDropdownOptionsToTableFilters } from "../../../utils/convertDropdownOptionsToTableFilters";
-import { isFetchBaseQueryError } from "../../../utils/isFetchBaseQueryError";
-import dayjs from "dayjs";
-import AppUpload from "../../../components/form/AppUpload";
 import { uploadImage } from "../../../utils/imageUpload";
+import { isFetchBaseQueryError } from "../../../utils/isFetchBaseQueryError";
 
 const { Title } = Typography;
 
@@ -62,8 +66,8 @@ const ManageBikes = () => {
         brand: bike.brand,
         model: bike.model,
         year: dayjs().year(bike.year).startOf("year"),
-        cc: bike.cc,
-        pricePerHour: bike.pricePerHour,
+        cc: String(bike.cc),
+        pricePerHour: String(bike.pricePerHour),
         description: bike.description,
         image: bike?.image,
       }
@@ -254,7 +258,6 @@ const ManageBikes = () => {
       title: "Model",
       dataIndex: "model",
       key: "model",
-      filters: convertDropdownOptionsToTableFilters(modelOptions),
     },
     {
       title: "Year",
@@ -376,7 +379,10 @@ const ManageBikes = () => {
         onCancel={handleAddBikeCancel}
         width={1200}
         footer={null}>
-        <AppForm onSubmit={handleAddBike} resetAfterSubmit>
+        <AppForm
+          onSubmit={handleAddBike}
+          schema={bikeCreateSchema}
+          resetAfterSubmit>
           <Row gutter={[24, 24]} style={{ marginTop: "2rem" }}>
             <Col xs={24} md={12}>
               <AppInput
@@ -396,11 +402,10 @@ const ManageBikes = () => {
               />
             </Col>
             <Col xs={24} md={12}>
-              <AppSelect
+              <AppInput
                 name="model"
                 label="Model"
-                options={modelOptions}
-                placeholder="Select Model"
+                placeholder="Enter Model"
                 required
               />
             </Col>
@@ -446,7 +451,6 @@ const ManageBikes = () => {
                 accept=".jpg,.jpeg,.png"
                 multiple={false}
                 maxCount={1}
-                required
                 style={{ width: "100%" }}
               />
             </Col>
@@ -476,7 +480,10 @@ const ManageBikes = () => {
         onCancel={handleUpdateBikeCancel}
         width={1200}
         footer={null}>
-        <AppForm onSubmit={handleUpdateBike} defaultValues={selectedBikeValues}>
+        <AppForm
+          onSubmit={handleUpdateBike}
+          defaultValues={selectedBikeValues}
+          schema={bikeUpdateSchema}>
           <Row gutter={[24, 24]} style={{ marginTop: "2rem" }}>
             <Col xs={24} md={12}>
               <AppInput
@@ -496,11 +503,10 @@ const ManageBikes = () => {
               />
             </Col>
             <Col xs={24} md={12}>
-              <AppSelect
+              <AppInput
                 name="model"
                 label="Model"
-                options={modelOptions}
-                placeholder="Select Model"
+                placeholder="Enter Model"
                 required
               />
             </Col>

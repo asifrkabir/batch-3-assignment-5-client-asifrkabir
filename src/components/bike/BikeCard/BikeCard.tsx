@@ -1,10 +1,12 @@
-import { Card, Button } from "antd";
+import { Card, Button, Typography } from "antd";
 import { Link } from "react-router-dom";
 import { TBike } from "../../../types";
 
 type BikeCardProps = {
   bike: TBike;
 };
+
+const { Text } = Typography;
 
 const BikeCard = ({ bike }: BikeCardProps) => {
   return (
@@ -32,7 +34,17 @@ const BikeCard = ({ bike }: BikeCardProps) => {
         description={
           <div>
             <p>Brand: {bike.brand}</p>
+            <p>Model: {bike.model}</p>
             <p>Price per Hour: ${bike.pricePerHour}</p>
+            <p>
+              Available:{" "}
+              <Text
+                style={{
+                  color: bike.isAvailable ? "#009c4a" : "#ff6347",
+                }}>
+                {bike.isAvailable ? "Yes" : "No"}
+              </Text>
+            </p>
           </div>
         }
       />
