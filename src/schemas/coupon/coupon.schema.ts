@@ -11,14 +11,14 @@ export const couponCreateSchema = z.object({
     .refine((value) => value > 0 && value <= 100, {
       message: "Discount percentage must be between 1 and 100",
     }),
-  startTime: z
-    .any()
-    .refine((value) => dayjs.isDayjs(value) && value.isValid(), {
-      message: "Invalid date",
-    }),
-  endTime: z.any().refine((value) => dayjs.isDayjs(value) && value.isValid(), {
-    message: "Invalid date",
-  }),
+  // startTime: z
+  //   .any()
+  //   .refine((value) => dayjs.isDayjs(value) && value.isValid(), {
+  //     message: "Invalid date",
+  //   }),
+  // endTime: z.any().refine((value) => dayjs.isDayjs(value) && value.isValid(), {
+  //   message: "Invalid date",
+  // }),
 });
 
 export const couponUpdateSchema = z.object({
@@ -31,12 +31,12 @@ export const couponUpdateSchema = z.object({
     .refine((value) => value > 0 && value <= 100, {
       message: "Discount percentage must be between 1 and 100",
     }),
-  startTime: z
-    .any()
-    .refine((value) => dayjs.isDayjs(value) && value.isValid(), {
-      message: "Invalid date",
-    }),
-  endTime: z.any().refine((value) => dayjs.isDayjs(value) && value.isValid(), {
-    message: "Invalid date",
-  }),
+  // startTime: z
+  //   .any()
+  //   .refine((value) => dayjs.isDayjs(value) && value.isValid(), {
+  //     message: "Invalid date",
+  //   }),
+  // endTime: z.any().refine((value) => dayjs.isDayjs(value) && value.isValid(), {
+  //   message: "Invalid date",
+  // }),
 });

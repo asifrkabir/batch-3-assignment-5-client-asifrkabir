@@ -217,20 +217,20 @@ const ManageCoupons = () => {
       dataIndex: "discountPercentage",
       key: "discountPercentage",
     },
-    {
-      title: "Start Time",
-      dataIndex: "startTime",
-      key: "startTime",
-      render: (date: string) =>
-        date && dayjs(date).format("YYYY-MM-DD HH:mm:ss"),
-    },
-    {
-      title: "End Time",
-      dataIndex: "endTime",
-      key: "endTime",
-      render: (date: string) =>
-        date && dayjs(date).format("YYYY-MM-DD HH:mm:ss"),
-    },
+    // {
+    //   title: "Start Time",
+    //   dataIndex: "startTime",
+    //   key: "startTime",
+    //   render: (date: string) =>
+    //     date && dayjs(date).format("YYYY-MM-DD HH:mm:ss"),
+    // },
+    // {
+    //   title: "End Time",
+    //   dataIndex: "endTime",
+    //   key: "endTime",
+    //   render: (date: string) =>
+    //     date && dayjs(date).format("YYYY-MM-DD HH:mm:ss"),
+    // },
     {
       title: "Actions",
       key: "actions",
@@ -332,7 +332,7 @@ const ManageCoupons = () => {
                 required
               />
             </Col>
-            <Col xs={24} md={12}>
+            {/* <Col xs={24} md={12}>
               <AppDatePicker
                 name="startTime"
                 label="Start Time"
@@ -349,7 +349,7 @@ const ManageCoupons = () => {
                 placeholder="End Time"
                 required
               />
-            </Col>
+            </Col> */}
           </Row>
 
           <div
@@ -398,7 +398,7 @@ const ManageCoupons = () => {
                 required
               />
             </Col>
-            <Col xs={24} md={12}>
+            {/* <Col xs={24} md={12}>
               <AppDatePicker
                 name="startTime"
                 label="Start Time"
@@ -415,7 +415,7 @@ const ManageCoupons = () => {
                 placeholder="End Time"
                 required
               />
-            </Col>
+            </Col> */}
           </Row>
 
           <div

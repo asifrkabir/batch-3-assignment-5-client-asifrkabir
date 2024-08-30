@@ -57,6 +57,25 @@ const couponApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["coupons"],
     }),
+    assignCouponToUser: builder.mutation({
+      query: (data) => ({
+        url: "/coupons/user",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    getUserCouponByUserId: builder.query({
+      query: (userId) => ({
+        url: `/coupons/user/${userId}`,
+        method: "GET",
+      }),
+    }),
+    updateUserCoupon: builder.mutation({
+      query: (userCouponId) => ({
+        url: `/coupons/user/${userCouponId}`,
+        method: "PATCH",
+      }),
+    }),
   }),
 });
 
@@ -66,4 +85,7 @@ export const {
   useGetCouponByIdQuery,
   useUpdateCouponByIdMutation,
   useDeleteCouponMutation,
+  useAssignCouponToUserMutation,
+  useGetUserCouponByUserIdQuery,
+  useUpdateUserCouponMutation,
 } = couponApi;
