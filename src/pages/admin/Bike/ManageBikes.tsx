@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Button,
   Col,
@@ -109,10 +110,10 @@ const ManageBikes = () => {
   const handleAddBike: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("Processing...");
 
-    const image = data?.image && data?.image[0]?.originFileObj;
+    // const image = data?.image && data?.image[0]?.originFileObj;
 
     try {
-      let imageData = null;
+      // let imageData = null;
 
       // if (image) {
       //   imageData = await uploadImage(image);

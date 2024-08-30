@@ -1,50 +1,86 @@
-# React + TypeScript + Vite
+<div align="center">
+  <h1>Velocirent Frontend</h1>
+</div>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+# Bike Rental Website Frontend
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Introduction
 
-## Expanding the ESLint configuration
+The Bike Rental Website is a platform designed to offer a seamless experience for users to rent bikes online. It provides an intuitive interface for browsing available bikes, making reservations, and managing rental payments.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Project Description
 
-- Configure the top-level `parserOptions` property like this:
+This bike rental website frontend is built with React and TypeScript, utilizing Redux for state management and Ant Design for a modern, responsive UI. It supports functionalities like bike browsing, rental management, and secure payment processing.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Features
+
+- Browse available bikes by brand, model, and other attributes
+- View detailed information for each bike
+- Make reservations and manage current rentals
+- Apply coupons for discounts on rentals
+- Secure payment processing for bike rentals
+- Responsive design for optimal use on both mobile and desktop devices
+
+## Technology Stack
+
+- React
+- TypeScript
+- Redux Toolkit
+- Ant Design
+- React Router
+- React Hook Form
+- Zod
+- Day.js
+
+## Installation Guideline
+
+### Prerequisites
+
+Before running the application, ensure you have the following installed:
+
+- Node.js
+
+### Installation Steps
+
+1. Clone the repository to your local machine:
+
+```bash
+https://github.com/asifrkabir/batch-3-assignment-5-client-asifrkabir
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+2. Navigate to the project directory:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+cd batch-3-assignment-5-client-asifrkabir
 ```
+
+3. Install dependencies:
+
+```bash
+npm install
+```
+
+### Configuration
+
+1. Create a `.env` file in the root directory of the project.
+2. Add the following environment variables to the `.env` file:
+
+```bash
+VITE_BASE_API_URL=your_base_api_url_here
+VITE_IMGBB_API_KEY=your_imgbb_api_key_here
+VITE_STRIPE_PK=your_stripe_publishable_key_here
+```
+
+Adjust the values to match your application.
+
+## Usage
+
+To start the application, run the following command:
+
+```bash
+npm run start
+```
+
+The application will be running at http://localhost:5173.

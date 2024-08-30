@@ -13,7 +13,7 @@ import { logout, setUser } from "../features/auth/authSlice";
 import { TError } from "../../types";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_BASE_API_URL,
+  baseUrl: "https://batch-3-assignment-3-asifrkabir.vercel.app/api",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).persisted.auth.token;
@@ -38,7 +38,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 
   if (result?.error?.status === 401) {
     const res = await fetch(
-      `${import.meta.env.VITE_BASE_API_URL}/auth/refresh-token`,
+      `https://batch-3-assignment-3-asifrkabir.vercel.app/api/auth/refresh-token`,
       {
         method: "POST",
         credentials: "include",
@@ -69,6 +69,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithRefreshToken,
-  tagTypes: ["bikes", "rentals", "profile", "users", "coupons","myCoupon"],
+  tagTypes: ["bikes", "rentals", "profile", "users", "coupons", "myCoupon"],
   endpoints: () => ({}),
 });
