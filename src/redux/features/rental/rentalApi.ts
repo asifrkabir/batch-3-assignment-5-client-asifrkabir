@@ -10,7 +10,7 @@ const rentalApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["rentals"],
+      invalidatesTags: ["rentals", "bikes"],
     }),
     getAllRentals: builder.query({
       query: (args) => {
@@ -67,6 +67,14 @@ const rentalApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["rentals", "bikes"],
     }),
+    updateRental: builder.mutation({
+      query: (options) => ({
+        url: `/rentals/${options.id}`,
+        method: "PATCH",
+        body: options.data,
+      }),
+      invalidatesTags: ["rentals"],
+    }),
   }),
 });
 
@@ -75,4 +83,5 @@ export const {
   useGetAllRentalsQuery,
   useGetAllRentalsByUserQuery,
   useReturnBikeMutation,
+  useUpdateRentalMutation,
 } = rentalApi;

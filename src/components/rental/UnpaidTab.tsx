@@ -5,6 +5,7 @@ import { TRental } from "../../types/rental.type";
 import { Button, Pagination, Table, TableColumnsType, TableProps } from "antd";
 import dayjs from "dayjs";
 import { FaCreditCard } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
 type TTableData = Pick<
   TRental,
@@ -14,6 +15,7 @@ type TTableData = Pick<
 const UnpaidTab = () => {
   const [params, setParams] = useState<TQueryParam[]>([]);
   const [page, setPage] = useState(1);
+  const navigate = useNavigate();
 
   const { data: rentalData, isFetching } = useGetAllRentalsByUserQuery(
     [
@@ -41,6 +43,16 @@ const UnpaidTab = () => {
       setPage(page - 1);
     }
   }, [tableData, page]);
+
+  const goToPaymentPage = (data: TRental) => {
+    const paymentData = {
+      paymentType: "return",
+      paymentAmount: data.totalCost,
+      rentalId: data._id,
+    };
+
+    navigate("/payment", { state: paymentData });
+  };
 
   const columns: TableColumnsType<TTableData> = [
     {
@@ -75,7 +87,7 @@ const UnpaidTab = () => {
           <Button
             type="primary"
             disabled={!item.returnTime}
-            onClick={() => console.log(item)}>
+            onClick={() => goToPaymentPage(item)}>
             Pay Now <FaCreditCard />
           </Button>
         );
