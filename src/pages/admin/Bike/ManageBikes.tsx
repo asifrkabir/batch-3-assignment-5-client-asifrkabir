@@ -114,16 +114,17 @@ const ManageBikes = () => {
     try {
       let imageData = null;
 
-      if (image) {
-        imageData = await uploadImage(image);
-      }
+      // if (image) {
+      //   imageData = await uploadImage(image);
+      // }
 
       const bikeData = {
         ...data,
         year: Number(data.year.year()),
         cc: Number(data.cc),
         pricePerHour: Number(data.pricePerHour),
-        image: imageData?.data?.display_url,
+        image: data.image,
+        // image: imageData?.data?.display_url,
       };
 
       const res = await createBike(bikeData);
@@ -158,8 +159,12 @@ const ManageBikes = () => {
       let finalImageUrl = "";
 
       if (newImage) {
-        imageData = await uploadImage(newImage);
-        finalImageUrl = imageData?.data?.display_url;
+        try {
+          imageData = await uploadImage(newImage);
+          finalImageUrl = imageData?.data?.display_url;
+        } catch (err) {
+          finalImageUrl = "";
+        }
       } else {
         finalImageUrl = data?.image || "";
       }
@@ -445,13 +450,21 @@ const ManageBikes = () => {
               />
             </Col>
             <Col span={24}>
-              <AppUpload
+              <AppInput
                 name="image"
-                label="Upload Image"
+                label="Image URL"
+                placeholder="Enter Image URL"
+              />
+            </Col>
+            <Col span={24}>
+              <AppUpload
+                name="image1"
+                label="Upload Image (disbled due to image hosting provider network issues)"
                 accept=".jpg,.jpeg,.png"
                 multiple={false}
                 maxCount={1}
                 style={{ width: "100%" }}
+                disabled
               />
             </Col>
           </Row>
@@ -556,11 +569,12 @@ const ManageBikes = () => {
             <Col span={24}>
               <AppUpload
                 name="newImage"
-                label="Upload Image"
+                label="Upload Image (disbled due to image hosting provider network issues)"
                 accept=".jpg,.jpeg,.png"
                 multiple={false}
                 maxCount={1}
                 style={{ width: "100%" }}
+                disabled
               />
             </Col>
           </Row>

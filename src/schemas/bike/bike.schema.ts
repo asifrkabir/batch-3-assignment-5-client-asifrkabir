@@ -27,7 +27,7 @@ export const bikeCreateSchema = z.object({
   brand: z
     .string({ required_error: "This field is required" })
     .min(1, { message: "This field is required" }),
-  image: z.string().optional(),
+  image: z.any().optional(),
 });
 
 export const bikeUpdateSchema = z.object({
@@ -57,4 +57,5 @@ export const bikeUpdateSchema = z.object({
     .string({ required_error: "This field is required" })
     .min(1, { message: "This field is required" }),
   image: z.string().optional(),
+  newImage: z.any().optional(),
 });

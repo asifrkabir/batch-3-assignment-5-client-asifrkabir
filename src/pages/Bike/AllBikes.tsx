@@ -20,6 +20,7 @@ const AllBikes = () => {
     model: "",
     year: "",
     isAvailable: isAvailable,
+    limit: 1000
   });
 
   const [params, setParams] = useState<TQueryParam[]>([]);
