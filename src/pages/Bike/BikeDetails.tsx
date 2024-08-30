@@ -13,11 +13,19 @@ import {
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useGetBikeByIdQuery } from "../../redux/features/bike/bikeApi";
 import { IoIosArrowRoundBack } from "react-icons/io";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import dayjs from "dayjs";
 
 const { Title, Paragraph } = Typography;
 
 const BikeDetails = () => {
+  const [minDateTime, setMinDateTime] = useState("");
+
+  useEffect(() => {
+    const now = dayjs().format("YYYY-MM-DDTHH:mm");
+    setMinDateTime(now);
+  }, []);
+
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: bikeData, isLoading, error } = useGetBikeByIdQuery(id);
@@ -138,7 +146,7 @@ const BikeDetails = () => {
                 rules={[
                   { required: true, message: "Please select start time!" },
                 ]}>
-                <Input type="datetime-local" />
+                <Input type="datetime-local" min={minDateTime} />
               </Form.Item>
               <Form.Item>
                 <Paragraph>
