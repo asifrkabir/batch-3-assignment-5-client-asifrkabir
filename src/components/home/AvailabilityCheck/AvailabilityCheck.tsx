@@ -1,23 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Col, DatePicker, Form, Row } from "antd";
+import { Button, Col, Form, Input, Row } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LuBike } from "react-icons/lu";
 import { HiSparkles } from "react-icons/hi2";
 
-const { RangePicker } = DatePicker;
-
 const AvailabilityCheck = () => {
-  const [dateRange, setDateRange] = useState<[string, string] | null>(null);
+  const [searchValue, setSearchValue] = useState<string>("");
   const navigate = useNavigate();
 
-  const onDateChange = (dates: any, dateStrings: [string, string]) => {
-    setDateRange(dateStrings);
-  };
-
   const handleCheckAvailability = () => {
-    if (dateRange) {
-      navigate(`/availability?start=${dateRange[0]}&end=${dateRange[1]}`);
+    if (searchValue) {
+      navigate(`/bikes?searchTerm=${searchValue}&isAvailable=true`);
     }
   };
 
@@ -40,15 +33,16 @@ const AvailabilityCheck = () => {
           textAlign: "center",
           color: "#fff",
         }}>
-        Have a trip planned out? Check available bikes here{" "}
+        Have a trip planned out? Search for available bikes here{" "}
         <LuBike style={{ marginLeft: "0.5rem" }} />
       </h2>
       <Form style={{ display: "flex", justifyContent: "center" }}>
         <Row gutter={[24, 24]} justify="center" style={{ width: "100%" }}>
           <Col xs={24} md={12} lg={12}>
             <Form.Item>
-              <RangePicker
-                onChange={onDateChange}
+              <Input
+                placeholder="Search by bike name, brand, model etc."
+                onChange={(e) => setSearchValue(e.target.value)}
                 size="large"
                 style={{ width: "100%" }}
               />
@@ -59,9 +53,9 @@ const AvailabilityCheck = () => {
               type="primary"
               size="large"
               onClick={handleCheckAvailability}
-              disabled={!dateRange}
+              disabled={!searchValue}
               style={
-                !dateRange
+                !searchValue
                   ? {
                       color: "gray",
                     }

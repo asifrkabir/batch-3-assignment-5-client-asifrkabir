@@ -1,18 +1,25 @@
-import { Col, Empty, Row, Select, Spin, DatePicker, Input } from "antd";
+import { Col, DatePicker, Empty, Input, Row, Select, Spin } from "antd";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import BikeCard from "../../components/bike/BikeCard/BikeCard";
 import { useGetAllBikesQuery } from "../../redux/features/bike/bikeApi";
 import { TQueryParam } from "../../types";
-import dayjs from "dayjs";
+import { useLocation } from "react-router-dom";
 
 const { Option } = Select;
 
 const AllBikes = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const searchTerm = queryParams.get("searchTerm") || "";
+  const isAvailable = queryParams.get("isAvailable") || "";
+
   const [filters, setFilters] = useState({
+    searchTerm: searchTerm,
     brand: "",
     model: "",
     year: "",
-    isAvailable: "",
+    isAvailable: isAvailable,
   });
 
   const [params, setParams] = useState<TQueryParam[]>([]);
@@ -54,6 +61,7 @@ const AllBikes = () => {
             <Input
               placeholder="Search by name, brand, model or description"
               style={{ width: 200 }}
+              defaultValue={searchTerm}
               onChange={(e) => handleFilterChange("searchTerm", e.target.value)}
             />
           </Col>
@@ -87,7 +95,9 @@ const AllBikes = () => {
             <Select
               placeholder="Availability"
               style={{ width: 200 }}
+              defaultValue={isAvailable}
               onChange={(value) => handleFilterChange("isAvailable", value)}>
+              <Option value="">All</Option>
               <Option value="true">Available</Option>
               <Option value="false">Unavailable</Option>
             </Select>
