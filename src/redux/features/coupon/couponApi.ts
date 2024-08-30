@@ -63,18 +63,21 @@ const couponApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["myCoupon"],
     }),
     getUserCouponByUserId: builder.query({
       query: (userId) => ({
         url: `/coupons/user/${userId}`,
         method: "GET",
       }),
+      providesTags: ["myCoupon"],
     }),
     updateUserCoupon: builder.mutation({
       query: (userCouponId) => ({
         url: `/coupons/user/${userCouponId}`,
         method: "PATCH",
       }),
+      invalidatesTags: ["myCoupon"],
     }),
   }),
 });
