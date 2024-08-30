@@ -14,11 +14,13 @@ import ManageBikes from "../pages/admin/Bike/ManageBikes";
 import ManageRentals from "../pages/admin/ManageRentals";
 import Payment from "../pages/Payment/Payment";
 import PaymentSuccess from "../pages/Payment/PaymentSuccess";
+import ErrorPage from "../pages/ErrorPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/",
