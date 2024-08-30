@@ -13,6 +13,7 @@ import ManageUsers from "../pages/admin/ManageUsers";
 import ManageBikes from "../pages/admin/Bike/ManageBikes";
 import ManageRentals from "../pages/admin/ManageRentals";
 import Payment from "../pages/Payment/Payment";
+import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +65,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Payment />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/payment-success",
+        element: (
+          <ProtectedRoute>
+            <PaymentSuccess />
           </ProtectedRoute>
         ),
       },

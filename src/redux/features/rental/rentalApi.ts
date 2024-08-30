@@ -4,6 +4,14 @@ import { baseApi } from "../../api/baseApi";
 
 const rentalApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    createRental: builder.mutation({
+      query: (data) => ({
+        url: "/rentals",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["rentals"],
+    }),
     getAllRentals: builder.query({
       query: (args) => {
         const params = new URLSearchParams();
@@ -63,6 +71,7 @@ const rentalApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useCreateRentalMutation,
   useGetAllRentalsQuery,
   useGetAllRentalsByUserQuery,
   useReturnBikeMutation,

@@ -35,11 +35,15 @@ const BikeDetails = () => {
     // Convert startTime to ISO 8601 format
     const startTimeISO = new Date(values.startTime).toISOString();
 
-    // Here you can handle form submission logic
-    // e.g., call API to confirm the booking and then redirect to the payment page
-    console.log("Booking values:", { ...values, startTime: startTimeISO });
+    const paymentData = {
+      paymentType: "booking",
+      startTime: startTimeISO,
+      bikeId: id,
+      paymentAmount: 100,
+    };
+
     setIsModalVisible(false);
-    navigate("/payment"); // Redirect to payment page
+    navigate("/payment", { state: paymentData });
   };
 
   const handleModalCancel = () => {
