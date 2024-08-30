@@ -1,34 +1,33 @@
-import React from "react";
 import { Layout, Space } from "antd";
-import { FaXTwitter, FaLinkedin } from "react-icons/fa6";
 import { FaFacebookSquare, FaInstagram } from "react-icons/fa";
+import { FaLinkedin, FaXTwitter } from "react-icons/fa6";
+import { Link, NavLink } from "react-router-dom";
 
 const { Footer } = Layout;
 
-const AppFooter: React.FC = () => {
+const AppFooter = () => {
   return (
     <Footer style={{ textAlign: "center", padding: "24px 50px" }}>
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
-        {/* Social Media Icons */}
         <Space size="middle">
-          <a href="/" rel="noopener noreferrer">
+          <Link to="/">
             <FaFacebookSquare style={{ fontSize: "24px", color: "#808080" }} />
-          </a>
-          <a href="/" rel="noopener noreferrer">
+          </Link>
+          <Link to="/">
             <FaXTwitter style={{ fontSize: "24px", color: "#808080" }} />
-          </a>
-          <a href="/" rel="noopener noreferrer">
+          </Link>
+          <Link to="/">
             <FaInstagram style={{ fontSize: "24px", color: "#808080" }} />
-          </a>
-          <a href="/" rel="noopener noreferrer">
+          </Link>
+          <Link to="/">
             <FaLinkedin style={{ fontSize: "24px", color: "#808080" }} />
-          </a>
+          </Link>
         </Space>
 
         <Space size="middle">
-          <a href="/privacy-policy">Privacy Policy</a>
-          <a href="/terms-of-service">Terms of Service</a>
-          <a href="/contact-us">Contact Us</a>
+          <NavLink to="/">Home</NavLink>
+          <NavLink to="/about">About</NavLink>
+          <NavLink to="/bikes">Bikes</NavLink>
         </Space>
 
         <div>
